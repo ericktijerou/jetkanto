@@ -1,6 +1,6 @@
 package com.ericktijerou.jetkanto.data.entity
 
-import com.ericktijerou.jetkanto.data.local.dao.UserEntity
+import com.ericktijerou.jetkanto.data.local.entity.UserEntity
 import com.ericktijerou.jetkanto.data.local.entity.RecordEntity
 
 fun RecordModel.toLocal() = RecordEntity(

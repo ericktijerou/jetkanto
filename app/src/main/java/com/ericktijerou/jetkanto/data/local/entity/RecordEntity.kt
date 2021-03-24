@@ -3,7 +3,6 @@ package com.ericktijerou.jetkanto.data.local.entity
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ericktijerou.jetkanto.data.local.dao.UserEntity
 
 @Entity(tableName = "Record")
 data class RecordEntity(

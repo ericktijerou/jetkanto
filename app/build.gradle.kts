@@ -164,4 +164,7 @@ dependencies {
     //Paging
     implementation(Libs.Paging.runtime)
     implementation(Libs.Paging.compose)
+
+    implementation(Libs.DataStore.preferences)
+
 }
