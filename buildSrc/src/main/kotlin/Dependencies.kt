@@ -36,6 +36,12 @@ object Libs {
         const val runtime = "androidx.room:room-runtime:${Versions.room}"
     }
 
+    object Paging {
+        const val runtime = "androidx.paging:paging-runtime:${Versions.paging}"
+        const val compose = "androidx.paging:paging-compose:${Versions.composePaging}"
+    }
+
+
     object Compose {
         const val runtime = "androidx.compose.runtime:runtime:${Versions.compose}"
         const val ui = "androidx.compose.ui:ui:${Versions.compose}"
@@ -120,12 +126,13 @@ object Versions {
     internal const val lifecycle = "2.3.0"
     internal const val room = "2.3.0-beta01"
     internal const val okhttp = "4.9.1"
-    internal const val composePaging = "1.0.0-alpha08"
     internal const val composeViewModel = "1.0.0-alpha01"
     internal const val composeActivity = "1.3.0-alpha04"
     internal const val composeConstraint = "1.0.0-alpha03"
     internal const val navigationCompose = "1.0.0-alpha09"
     internal const val spotless = "5.10.0"
+    internal const val paging = "3.0.0-alpha13"
+    internal const val composePaging = "1.0.0-alpha08"
     const val kotlin = "1.4.31"
     const val apollo = "2.5.3"
     const val compose = "1.0.0-beta02"

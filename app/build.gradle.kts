@@ -158,4 +158,8 @@ dependencies {
     // Accompanist
     implementation(Libs.Accompanist.coil)
     implementation(Libs.Accompanist.insets)
+
+    //Paging
+    implementation(Libs.Paging.runtime)
+    implementation(Libs.Paging.compose)
 }
