@@ -36,7 +36,7 @@ android {
             buildConfigField(
                 "String",
                 "API_URL",
-                "\"https://run.mocky.io/v3/\""
+                "\"https://run.mocky.io/\""
             )
         }
 
@@ -49,7 +49,7 @@ android {
             buildConfigField(
                 "String",
                 "API_URL",
-                "\"https://run.mocky.io/v3/\""
+                "\"https://run.mocky.io/\""
             )
         }
     }
@@ -148,9 +148,11 @@ dependencies {
     kapt(Libs.Dagger.daggerCompiler)
     kapt(Libs.Dagger.hiltCompiler)
 
-    // Apollo
-    implementation(Libs.Apollo.apollo)
-    implementation(Libs.Apollo.apolloCoroutines)
+    // Retrofit
+    implementation(Libs.Retrofit.retrofit)
+    implementation(Libs.Retrofit.retrofitGsonConverter)
+    implementation(Libs.Retrofit.retrofitScalarsConverter)
+    implementation(Libs.Retrofit.retrofitKotlixConverter)
 
     // OkHttp
     implementation(Libs.OkHttp.okHttpInterceptor)

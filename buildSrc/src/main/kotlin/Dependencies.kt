@@ -41,7 +41,6 @@ object Libs {
         const val compose = "androidx.paging:paging-compose:${Versions.composePaging}"
     }
 
-
     object Compose {
         const val runtime = "androidx.compose.runtime:runtime:${Versions.compose}"
         const val ui = "androidx.compose.ui:ui:${Versions.compose}"
@@ -62,10 +61,14 @@ object Libs {
         const val compose = "androidx.navigation:navigation-compose:${Versions.navigationCompose}"
     }
 
-    object Apollo {
-        const val apollo = "com.apollographql.apollo:apollo-runtime:${Versions.apollo}"
-        const val apolloCoroutines =
-            "com.apollographql.apollo:apollo-coroutines-support:${Versions.apollo}"
+    object Retrofit {
+        const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
+        const val retrofitGsonConverter = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
+        const val retrofitScalarsConverter =
+            "com.squareup.retrofit2:converter-scalars:${Versions.retrofit}"
+        const val retrofitKotlixConverter =
+            "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Versions.retrofitKotlinxVersion}"
+
     }
 
     object OkHttp {
@@ -133,6 +136,8 @@ object Versions {
     internal const val spotless = "5.10.0"
     internal const val paging = "3.0.0-alpha13"
     internal const val composePaging = "1.0.0-alpha08"
+    internal const val retrofit = "2.6.1"
+    internal const val retrofitKotlinxVersion = "0.4.0"
     const val kotlin = "1.4.31"
     const val apollo = "2.5.3"
     const val compose = "1.0.0-beta02"
