@@ -36,7 +36,7 @@ android {
             buildConfigField(
                 "String",
                 "API_URL",
-                "\"https://api.github.com/graphql\""
+                "\"https://run.mocky.io/v3/\""
             )
         }
 
@@ -49,7 +49,7 @@ android {
             buildConfigField(
                 "String",
                 "API_URL",
-                "\"https://api.github.com/graphql\""
+                "\"https://run.mocky.io/v3/\""
             )
         }
     }
