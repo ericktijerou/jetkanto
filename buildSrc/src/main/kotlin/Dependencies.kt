@@ -41,6 +41,10 @@ object Libs {
         const val compose = "androidx.paging:paging-compose:${Versions.composePaging}"
     }
 
+    object DataStore {
+        const val preferences = "androidx.datastore:datastore-preferences:1.0.0-alpha08"
+    }
+
     object Compose {
         const val runtime = "androidx.compose.runtime:runtime:${Versions.compose}"
         const val ui = "androidx.compose.ui:ui:${Versions.compose}"
