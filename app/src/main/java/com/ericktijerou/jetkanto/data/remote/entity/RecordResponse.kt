@@ -20,11 +20,3 @@ data class RecordResponse(
     @SerializedName("likes")
     val likeCount: Int? = null
 )
-
-fun RecordResponse.toData() = RecordModel(
-    user = user.orEmpty().toData(),
-    songName = songName.orEmpty(),
-    videoUrl = videoUrl.orEmpty(),
-    preview = preview.orEmpty(),
-    likeCount = likeCount.orZero()
-)

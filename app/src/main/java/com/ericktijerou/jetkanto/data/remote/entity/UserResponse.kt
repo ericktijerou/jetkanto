@@ -35,14 +35,3 @@ data class UserResponse(
 fun UserResponse?.orEmpty(): UserResponse {
     return this ?: UserResponse(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, ZERO, ZERO, ZERO)
 }
-
-fun UserResponse.toData() = UserModel(
-    id = id.orEmpty(),
-    name = name.orEmpty(),
-    username = username.orEmpty(),
-    avatar = avatar.orEmpty(),
-    bio = bio.orEmpty(),
-    followers = followers.orZero(),
-    followed = followed.orZero(),
-    views = views.orZero()
-)

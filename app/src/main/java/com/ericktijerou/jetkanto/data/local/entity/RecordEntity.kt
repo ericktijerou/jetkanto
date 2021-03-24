@@ -7,7 +7,7 @@ import com.ericktijerou.jetkanto.data.local.dao.UserEntity
 
 @Entity(tableName = "Record")
 data class RecordEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @Embedded val user: UserEntity,
     val songName: String,
     val videoUrl: String,
