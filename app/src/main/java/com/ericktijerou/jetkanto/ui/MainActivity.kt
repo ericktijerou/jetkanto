@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto
+package com.ericktijerou.jetkanto.ui
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
