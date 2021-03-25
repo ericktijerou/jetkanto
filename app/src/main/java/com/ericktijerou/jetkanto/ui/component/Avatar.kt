@@ -18,6 +18,7 @@ package com.ericktijerou.jetkanto.ui.component
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.progressSemantics
 import androidx.compose.material.MaterialTheme
@@ -38,36 +39,45 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Avatar(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colors.secondaryVariant,
+    color: Color = MaterialTheme.colors.primary,
     strokeWidth: Dp = ProgressIndicatorDefaults.StrokeWidth,
-    image: @Composable () -> Unit
+    image: @Composable (imageSize: Dp) -> Unit,
 ) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+    BoxWithConstraints(modifier = modifier, contentAlignment = Alignment.Center) {
         val stroke = with(LocalDensity.current) {
             Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Butt)
         }
-        DrawCircleAvatar(
+        CircumferenceAvatar(
             stroke = stroke,
             color = color.copy(alpha = 0.1f),
-            modifier = Modifier
-                .progressSemantics(1f)
-                .size(112.dp)
-                .focusable()
+            modifier = Modifier.size(maxWidth)
         )
-        DrawCircleAvatar(
+        CircumferenceAvatar(
             stroke = stroke,
             color = color.copy(alpha = 0.3f),
-            modifier = Modifier
-                .progressSemantics(1f)
-                .size(92.dp)
-                .focusable()
+            modifier = Modifier.size(maxWidth - 20.dp)
         )
-        image()
+        CircleAvatar(modifier = Modifier.size(maxWidth - 40.dp), color = color.copy(alpha = 0.4f))
+        image(maxWidth - 40.dp)
+    }
+}
+
+
+@Composable
+fun CircleAvatar(modifier: Modifier, color: Color) {
+    Canvas(modifier = modifier) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+        drawCircle(
+            color = color,
+            center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
+            radius = size.minDimension / 2
+        )
     }
 }
 
 @Composable
-fun DrawCircleAvatar(stroke: Stroke, modifier: Modifier, color: Color) {
+fun CircumferenceAvatar(stroke: Stroke, modifier: Modifier, color: Color) {
     Canvas(modifier = modifier) {
         val startAngle = 270f
         val diameterOffset = stroke.width / 2

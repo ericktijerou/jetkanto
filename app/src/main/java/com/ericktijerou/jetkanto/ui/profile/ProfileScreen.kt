@@ -19,6 +19,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,7 +71,7 @@ fun ProfileScreen() {
                 topBarTintExpandedColor = Color.White
             ) {
                 val alphaAnimate by animateFloatAsState(
-                    targetValue = if (scrollProgress < 0.5f) 0f else scrollProgress,
+                    targetValue = if (scrollProgress < 0.4f) 0f else scrollProgress,
                     animationSpec = spring(stiffness = Spring.StiffnessLow)
                 )
                 TopBarContent(modifier = Modifier
@@ -111,13 +112,18 @@ fun TopBarContent(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom,
     ) {
-        Avatar(color = Color.White, strokeWidth = 2.dp) {
+        Avatar(
+            color = Color.White,
+            strokeWidth = 2.dp,
+            modifier = Modifier.size(112.dp)
+        ) { imageSize ->
             CoilImage(
                 data = "https://avatars.githubusercontent.com/u/17746153?s=400&u=07209b0bc7226e4196dc4488b0dcab92e092027c&v=4",
                 contentDescription = stringResource(R.string.label_avatar),
+                fadeIn = true,
                 modifier = Modifier
-                    .size(72.dp)
                     .clip(CircleShape)
+                    .size(imageSize)
             )
         }
         Text(
