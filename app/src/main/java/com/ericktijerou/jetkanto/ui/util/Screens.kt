@@ -17,7 +17,7 @@ package com.ericktijerou.jetkanto.ui.util
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryMusic
+import androidx.compose.material.icons.filled.MusicVideo
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayCircleOutline
@@ -30,7 +30,7 @@ sealed class Screens(val route: String) {
 sealed class MainSection(val route: String, val icon: ImageVector) {
     object Community : MainSection("user", Icons.Filled.Home)
     object Explore : MainSection("repo", Icons.Filled.PlayCircleOutline)
-    object Song : MainSection("repo", Icons.Filled.LibraryMusic)
+    object Song : MainSection("repo", Icons.Filled.MusicVideo)
     object Notification : MainSection("repo", Icons.Filled.Notifications)
     object Profile : MainSection("repo", Icons.Filled.Person)
 }

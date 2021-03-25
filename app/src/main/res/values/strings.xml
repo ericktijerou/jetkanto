@@ -5,4 +5,6 @@
     <string name="label_songs">Songs</string>
     <string name="label_notifications">Notifications</string>
     <string name="label_profile">Profile</string>
+    <string name="label_avatar">Avatar</string>
+    <string name="label_edit_profile">Edit profile</string>
 </resources>

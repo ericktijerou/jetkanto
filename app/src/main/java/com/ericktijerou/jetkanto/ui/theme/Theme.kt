@@ -38,7 +38,7 @@ private val DarkColorPalette = darkColors(
     primaryVariant = BlackLight,
     background = BackgroundDark,
     surface = BlackLight,
-    onPrimary = BlackLight,
+    onPrimary = BlackLight
 )
 
 private val LightColorPalette = lightColors(
@@ -46,7 +46,7 @@ private val LightColorPalette = lightColors(
     primaryVariant = Color.White,
     background = BackgroundLight,
     surface = Color.White,
-    onPrimary = Color.White,
+    onPrimary = Color.White
 )
 
 private val LightPuppyColorPalette = KantoColors(
