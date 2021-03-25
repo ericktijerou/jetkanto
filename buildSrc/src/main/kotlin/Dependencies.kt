@@ -12,7 +12,6 @@ object Libs {
     object Dagger {
         const val daggerCompiler = "com.google.dagger:hilt-android-compiler:${Versions.daggerHilt}"
         const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.daggerHiltAndroid}"
-        const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.daggerHiltAndroid}"
         const val hiltNavigation = "androidx.hilt:hilt-navigation-fragment:${Versions.daggerHiltAndroid}"
         const val hiltAndroid = "com.google.dagger:hilt-android:${Versions.daggerHilt}"
         const val hiltWork = "androidx.hilt:hilt-work:${Versions.daggerHiltAndroid}"

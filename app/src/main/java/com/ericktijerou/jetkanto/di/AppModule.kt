@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto.data.local.entity
+package com.ericktijerou.jetkanto.di
 
-import com.ericktijerou.jetkanto.data.entity.RecordModel
-import com.ericktijerou.jetkanto.data.entity.UserModel
+import android.app.Application
+import androidx.work.WorkManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-fun UserEntity.toData() = UserModel(
-    id = userId,
-    name = name,
-    username = username,
-    avatar = avatar,
-    bio = bio,
-    followers = followers,
-    followed = followed,
-    views = views
-)
-
-fun RecordEntity.toData() = RecordModel(
-    user = user.toData(),
-    songName = songName,
-    videoUrl = videoUrl,
-    preview = preview,
-    likeCount = likeCount
-)
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+    @Singleton
+    @Provides
+    fun provideWorkManager(application: Application): WorkManager {
+        return WorkManager.getInstance(application)
+    }
+}

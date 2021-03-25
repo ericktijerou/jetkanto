@@ -143,7 +143,6 @@ dependencies {
 
     // Hilt + Dagger
     implementation(Libs.Dagger.hiltAndroid)
-    implementation(Libs.Dagger.hiltViewModel)
     implementation(Libs.Dagger.hiltNavigation)
     implementation(Libs.Dagger.hiltWork)
     kapt(Libs.Dagger.daggerCompiler)

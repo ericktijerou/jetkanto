@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class SessionManager @Inject constructor(private val context: Context) {
+class SessionHelper @Inject constructor(private val context: Context) {
 
     private val Context.userDataStore by preferencesDataStore(
         name = USER_PREFERENCES_NAME

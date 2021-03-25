@@ -16,16 +16,16 @@
 package com.ericktijerou.jetkanto.data.local
 
 import com.ericktijerou.jetkanto.data.entity.UserModel
-import com.ericktijerou.jetkanto.data.local.system.SessionManager
+import com.ericktijerou.jetkanto.data.local.system.SessionHelper
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SessionDataStore @Inject constructor(
-    private val sessionManager: SessionManager,
+    private val sessionHelper: SessionHelper,
 ) {
-    fun getSession(): Flow<UserModel> = sessionManager.session
+    fun getSession(): Flow<UserModel> = sessionHelper.session
 
     suspend fun saveSession(newSession: UserModel) {
-        sessionManager.saveSession(newSession)
+        sessionHelper.saveSession(newSession)
     }
 }

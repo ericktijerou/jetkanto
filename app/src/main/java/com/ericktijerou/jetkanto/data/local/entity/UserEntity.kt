@@ -19,7 +19,7 @@ import com.ericktijerou.jetkanto.core.EMPTY
 import com.ericktijerou.jetkanto.core.ZERO
 
 data class UserEntity(
-    val id: String = EMPTY,
+    val userId: String = EMPTY,
     val name: String,
     val username: String,
     val avatar: String,
