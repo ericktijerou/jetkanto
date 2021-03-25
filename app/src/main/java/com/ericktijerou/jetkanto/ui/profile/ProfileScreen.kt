@@ -15,6 +15,10 @@
  */
 package com.ericktijerou.jetkanto.ui.profile
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,12 +34,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ProgressIndicatorDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -43,7 +50,7 @@ import androidx.compose.ui.unit.sp
 import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.ui.component.Avatar
 import com.ericktijerou.jetkanto.ui.component.CollapsingScrollTopBar
-import com.ericktijerou.jetkanto.ui.component.CollapsingTopBarContent
+import com.ericktijerou.jetkanto.ui.component.CollapsingTopBarHeader
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.PurpleOpaque
 import dev.chrisbanes.accompanist.coil.CoilImage
@@ -52,8 +59,8 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 fun ProfileScreen() {
     CollapsingScrollTopBar(
         expandedHeight = headerExpandedHeight,
-        header = { scrollProgress ->
-            CollapsingTopBarContent(
+        header = { scrollProgress, scrollY ->
+            CollapsingTopBarHeader(
                 title = "Foo",
                 scrollProgress = scrollProgress,
                 expandedHeight = headerExpandedHeight,
@@ -62,7 +69,17 @@ fun ProfileScreen() {
                 topBarTintCollapsedColor = KantoTheme.customColors.textPrimaryColor,
                 topBarTintExpandedColor = Color.White
             ) {
-                TopBarContent(modifier = Modifier.fillMaxSize())
+                val alphaAnimate by animateFloatAsState(
+                    targetValue = if (scrollProgress < 0.5f) 0f else scrollProgress,
+                    animationSpec = spring(stiffness = Spring.StiffnessLow)
+                )
+                TopBarContent(modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        translationY = -scrollY
+                        alpha = alphaAnimate
+                    }
+                )
             }
         },
         scrollContent = { scrollState ->

@@ -58,7 +58,7 @@ import com.ericktijerou.jetkanto.ui.theme.PurpleLight
 @Composable
 fun CollapsingScrollTopBar(
     expandedHeight: Dp,
-    header: @Composable (scrollProgress: Float) -> Unit,
+    header: @Composable (scrollProgress: Float, scrollY: Float) -> Unit,
     scrollContent: @Composable (state: ScrollState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -67,7 +67,7 @@ fun CollapsingScrollTopBar(
         val scrollProgress = calculateScrollProgress(expandedHeight, scrollState)
 
         scrollContent(scrollState)
-        header(scrollProgress)
+        header(scrollProgress, scrollState.value.toFloat())
     }
 }
 
@@ -78,7 +78,7 @@ private fun calculateScrollProgress(height: Dp, state: ScrollState): Float {
 }
 
 @Composable
-fun CollapsingTopBarContent(
+fun CollapsingTopBarHeader(
     title: String,
     scrollProgress: Float,
     expandedHeight: Dp,
@@ -100,76 +100,85 @@ fun CollapsingTopBarContent(
     val topBarTintColor =
         calculateTopBarTintColor(scrollProgress, topBarTintExpandedColor, topBarTintCollapsedColor)
     val borderRadius = calculateRadius(scrollProgress, 28.dp, 0.dp)
-    Card(
-        elevation = elevation,
-        shape = RectangleShape,
-        backgroundColor = KantoTheme.colors.background,
+    Box(
         modifier = Modifier
-            .height(height)
+            .height(expandedHeight)
             .fillMaxWidth()
     ) {
-        Box(
+        Card(
+            elevation = elevation,
+            shape = RectangleShape,
+            backgroundColor = KantoTheme.colors.background,
             modifier = Modifier
+                .height(height)
                 .fillMaxWidth()
-                .height(expandedHeight)
-                .background(
-                    brush = Brush.verticalGradient(listOf(PurpleDark, PurpleLight)),
-                    shape = RoundedCornerShape(bottomStart = borderRadius, bottomEnd = borderRadius)
-                )
-        )
-        body()
-        Box(
-            contentAlignment = Alignment.CenterStart,
         ) {
             Box(
-                Modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp)
-                    .align(Alignment.BottomCenter)
+                    .height(expandedHeight)
+                    .background(
+                        brush = Brush.verticalGradient(listOf(PurpleDark, PurpleLight)),
+                        shape = RoundedCornerShape(
+                            bottomStart = borderRadius,
+                            bottomEnd = borderRadius
+                        )
+                    )
             )
-        }
-        Surface(
-            color = topBarCalculatedColor,
-            modifier = Modifier.fillMaxSize(),
-            shape = RoundedCornerShape(bottomStart = borderRadius, bottomEnd = borderRadius)
-        ) {}
-        Box(
-            contentAlignment = Alignment.CenterStart,
-        ) {
-            if (scrollProgress == 0f) {
-                Box(
-                    contentAlignment = Alignment.CenterStart,
-                    modifier = Modifier
-                        .height(collapsedHeight)
-                        .align(Alignment.BottomStart),
-                ) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.h4.copy(
-                            fontSize = titleSize,
-                            color = topBarTintColor
-                        ),
-                        modifier = Modifier.padding(start = 16.dp)
-                    )
-                }
-            }
             Box(
-                Modifier
-                    .height(collapsedHeight)
-                    .align(Alignment.TopEnd)
+                contentAlignment = Alignment.CenterStart,
             ) {
-                IconButton(
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    onClick = { onCloseClicked() }
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .align(Alignment.BottomCenter)
+                )
+            }
+            Surface(
+                color = topBarCalculatedColor,
+                modifier = Modifier.fillMaxSize(),
+                shape = RoundedCornerShape(bottomStart = borderRadius, bottomEnd = borderRadius)
+            ) {}
+            Box(
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                if (scrollProgress == 0f) {
+                    Box(
+                        contentAlignment = Alignment.CenterStart,
+                        modifier = Modifier
+                            .height(collapsedHeight)
+                            .align(Alignment.BottomStart),
+                    ) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.h4.copy(
+                                fontSize = titleSize,
+                                color = topBarTintColor
+                            ),
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                    }
+                }
+                Box(
+                    Modifier
+                        .height(collapsedHeight)
+                        .align(Alignment.TopEnd)
                 ) {
-                    Icon(
-                        Icons.Filled.Settings,
-                        contentDescription = "Close",
-                        tint = topBarTintColor
-                    )
+                    IconButton(
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        onClick = { onCloseClicked() }
+                    ) {
+                        Icon(
+                            Icons.Filled.Settings,
+                            contentDescription = "Close",
+                            tint = topBarTintColor
+                        )
+                    }
                 }
             }
         }
+        body()
     }
 }
 
