@@ -22,32 +22,29 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
-import com.ericktijerou.jetkanto.ui.theme.JetkantoTheme
+import com.ericktijerou.jetkanto.ui.theme.KantoTheme
+import com.ericktijerou.jetkanto.ui.util.LocalSysUiController
+import com.ericktijerou.jetkanto.ui.util.SystemUiController
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JetkantoTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
-                }
+            val systemUiController = remember { SystemUiController(window) }
+            CompositionLocalProvider(LocalSysUiController provides systemUiController) {
+                KantoApp()
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    JetkantoTheme {
-        Greeting("Android")
+    KantoTheme {
+        KantoApp()
     }
 }

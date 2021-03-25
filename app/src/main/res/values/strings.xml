@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">jetkanto</string>
+    <string name="label_community">Community</string>
+    <string name="label_explore">Explore</string>
+    <string name="label_songs">Songs</string>
+    <string name="label_notifications">Notifications</string>
+    <string name="label_profile">Profile</string>
 </resources>
