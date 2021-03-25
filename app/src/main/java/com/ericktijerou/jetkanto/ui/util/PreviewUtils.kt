@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto.ui.theme
+package com.ericktijerou.jetkanto.ui.util
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 
-val BlackLight = Color(0xFF161617)
-val GraySearchBoxLight = Color(0xFFF2F3F5)
-val GraySearchBoxDark = Color(0xFF1F1F1F)
-val BackgroundLight = Color(0xFFF2F3F5)
-val BackgroundDark = Color(0xFF0A0A0A)
-val TextSecondaryLight = Color(0xFF747577)
-val TextSecondaryDark = Color(0xFF8B8C8F)
-val Blue500 = Color(0xFF2767CF)
+@Composable
+internal fun ThemedPreview(
+    darkTheme: Boolean = false,
+    content: @Composable () -> Unit
+) {
+    KantoTheme(darkTheme = darkTheme) {
+        Surface {
+            content()
+        }
+    }
+}
