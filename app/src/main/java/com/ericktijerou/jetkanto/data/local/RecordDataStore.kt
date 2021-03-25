@@ -1,17 +1,20 @@
 package com.ericktijerou.jetkanto.data.local
 
-import androidx.paging.PagingSource
 import com.ericktijerou.jetkanto.data.entity.RecordModel
 import com.ericktijerou.jetkanto.data.entity.toLocal
 import com.ericktijerou.jetkanto.data.local.dao.RecordDao
-import com.ericktijerou.jetkanto.data.local.entity.RecordEntity
+import com.ericktijerou.jetkanto.data.local.entity.toData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RecordDataStore @Inject constructor(
     private val recordDao: RecordDao
 ) {
-    fun getRecordList(): PagingSource<Int, RecordEntity> {
-        return recordDao.getAll()
+    fun getRecordList(): Flow<List<RecordModel>> {
+        return recordDao.getAll().map { list ->
+            list.map { it.toData() }
+        }
     }
 
     suspend fun saveRecordList(list: List<RecordModel>) {

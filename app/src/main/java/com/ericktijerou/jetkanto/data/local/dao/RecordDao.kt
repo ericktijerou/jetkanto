@@ -6,11 +6,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ericktijerou.jetkanto.data.local.entity.RecordEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecordDao {
     @Query("SELECT * FROM Record")
-    fun getAll(): PagingSource<Int, RecordEntity>
+    fun getAll(): Flow<List<RecordEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecords(vararg repos: RecordEntity)

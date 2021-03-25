@@ -145,6 +145,7 @@ dependencies {
     implementation(Libs.Dagger.hiltAndroid)
     implementation(Libs.Dagger.hiltViewModel)
     implementation(Libs.Dagger.hiltNavigation)
+    implementation(Libs.Dagger.hiltWork)
     kapt(Libs.Dagger.daggerCompiler)
     kapt(Libs.Dagger.hiltCompiler)
 
@@ -166,5 +167,5 @@ dependencies {
     implementation(Libs.Paging.compose)
 
     implementation(Libs.DataStore.preferences)
-
+    implementation(Libs.WorkManager.runtime)
 }

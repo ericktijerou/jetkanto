@@ -15,6 +15,7 @@ object Libs {
         const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.daggerHiltAndroid}"
         const val hiltNavigation = "androidx.hilt:hilt-navigation-fragment:${Versions.daggerHiltAndroid}"
         const val hiltAndroid = "com.google.dagger:hilt-android:${Versions.daggerHilt}"
+        const val hiltWork = "androidx.hilt:hilt-work:${Versions.daggerHiltAndroid}"
     }
 
     object Activity {
@@ -42,7 +43,11 @@ object Libs {
     }
 
     object DataStore {
-        const val preferences = "androidx.datastore:datastore-preferences:1.0.0-alpha08"
+        const val preferences = "androidx.datastore:datastore-preferences:${Versions.dataStore}"
+    }
+
+    object WorkManager {
+        const val runtime = "androidx.work:work-runtime-ktx:${Versions.workManager}"
     }
 
     object Compose {
@@ -124,8 +129,8 @@ object Configs {
 object Versions {
     internal const val appcompat = "1.3.0-beta01"
     internal const val gradle = "7.0.0-alpha11"
-    internal const val daggerHilt = "2.31-alpha"
-    internal const val daggerHiltAndroid = "1.0.0-alpha03"
+    internal const val daggerHilt = "2.31.2-alpha"
+    internal const val daggerHiltAndroid = "1.0.0-beta01"
     internal const val coroutines = "1.4.2"
     internal const val materialDesign = "1.3.0"
     internal const val coreKtx = "1.5.0-beta01"
@@ -142,6 +147,8 @@ object Versions {
     internal const val composePaging = "1.0.0-alpha08"
     internal const val retrofit = "2.6.1"
     internal const val retrofitKotlinxVersion = "0.4.0"
+    internal const val dataStore = "1.0.0-alpha08"
+    internal const val workManager = "2.5.0"
     const val kotlin = "1.4.31"
     const val apollo = "2.5.3"
     const val compose = "1.0.0-beta02"
