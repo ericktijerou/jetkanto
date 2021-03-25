@@ -25,7 +25,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.util.LocalSysUiController
 import com.ericktijerou.jetkanto.ui.util.SystemUiController
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

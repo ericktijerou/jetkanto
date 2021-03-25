@@ -16,53 +16,40 @@
 package com.ericktijerou.jetkanto.ui.profile
 
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ProgressIndicatorDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.ericktijerou.jetkanto.R
-import com.ericktijerou.jetkanto.ui.component.Avatar
 import com.ericktijerou.jetkanto.ui.component.CollapsingScrollTopBar
 import com.ericktijerou.jetkanto.ui.component.CollapsingTopBarHeader
+import com.ericktijerou.jetkanto.ui.entity.orEmpty
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
-import com.ericktijerou.jetkanto.ui.theme.PurpleOpaque
-import dev.chrisbanes.accompanist.coil.CoilImage
+import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 
 @Composable
 fun ProfileScreen() {
+    val viewModel: ProfileViewModel by hiltViewModel()
     CollapsingScrollTopBar(
         expandedHeight = headerExpandedHeight,
         header = { scrollProgress, scrollY ->
+            val session = viewModel.session.collectAsState(initial = null).value.orEmpty()
             CollapsingTopBarHeader(
-                title = "Foo",
+                title = session.name,
                 scrollProgress = scrollProgress,
                 expandedHeight = headerExpandedHeight,
                 collapsedHeight = headerCollapsedHeight,
@@ -71,15 +58,17 @@ fun ProfileScreen() {
                 topBarTintExpandedColor = Color.White
             ) {
                 val alphaAnimate by animateFloatAsState(
-                    targetValue = if (scrollProgress < 0.4f) 0f else scrollProgress,
+                    targetValue = if (scrollProgress < 0.5f) 0f else scrollProgress,
                     animationSpec = spring(stiffness = Spring.StiffnessLow)
                 )
-                TopBarContent(modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer {
-                        translationY = -scrollY
-                        alpha = alphaAnimate
-                    }
+                TopBarContent(
+                    session = session,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer {
+                            translationY = -scrollY
+                            alpha = alphaAnimate
+                        }
                 )
             }
         },
@@ -103,96 +92,6 @@ fun ProfileScreen() {
         },
         modifier = Modifier.fillMaxSize()
     )
-}
-
-@Composable
-fun TopBarContent(modifier: Modifier = Modifier) {
-    Column(
-        modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom,
-    ) {
-        Avatar(
-            color = Color.White,
-            strokeWidth = 2.dp,
-            modifier = Modifier.size(112.dp)
-        ) { imageSize ->
-            CoilImage(
-                data = "https://avatars.githubusercontent.com/u/17746153?s=400&u=07209b0bc7226e4196dc4488b0dcab92e092027c&v=4",
-                contentDescription = stringResource(R.string.label_avatar),
-                fadeIn = true,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(imageSize)
-            )
-        }
-        Text(
-            text = "Erick Tijero",
-            style = KantoTheme.typography.h6.copy(fontWeight = FontWeight.Black),
-            color = Color.White,
-            modifier = Modifier.padding(top = 12.dp)
-        )
-        Text(
-            text = "@ericktijerou",
-            style = KantoTheme.typography.body2,
-            color = Color.White.copy(alpha = 0.6f)
-        )
-        Text(
-            text = "Bio",
-            style = KantoTheme.typography.body2,
-            color = Color.White.copy(alpha = 0.6f),
-            modifier = Modifier.padding(top = 8.dp)
-        )
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .height(24.dp)
-                .background(color = Color.White, shape = CircleShape)
-        ) {
-            Text(
-                text = stringResource(R.string.label_edit_profile),
-                style = KantoTheme.typography.body2.copy(
-                    color = Color.Black,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-        }
-        Row(
-            modifier = Modifier
-                .padding(vertical = 16.dp, horizontal = 24.dp)
-                .height(50.dp)
-                .fillMaxWidth()
-                .background(color = PurpleOpaque, shape = RoundedCornerShape(16.dp)),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            for (i in 0..2) {
-                IndicatorProfile(modifier = Modifier.weight(1f))
-            }
-        }
-    }
-}
-
-@Composable
-fun IndicatorProfile(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "0",
-            style = KantoTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
-            color = Color.White
-        )
-        Text(
-            text = "Followers",
-            style = KantoTheme.typography.body2,
-            color = Color.White.copy(alpha = 0.6f)
-        )
-    }
 }
 
 private val headerExpandedHeight = 330.dp

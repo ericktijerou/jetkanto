@@ -15,14 +15,17 @@
  */
 package com.ericktijerou.jetkanto.di
 
+import android.content.Context
+import com.ericktijerou.jetkanto.core.NetworkConnectivity
+import com.ericktijerou.jetkanto.data.remote.api.KantoApi
 import com.ericktijerou.jetkanto.data.remote.util.buildOkHttpClient
 import com.ericktijerou.jetkanto.data.remote.util.buildRetrofit
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -36,7 +39,13 @@ object RemoteModule {
 
     @Provides
     @Singleton
-    fun provideApollo(okHttpClient: OkHttpClient): Retrofit {
-        return buildRetrofit(okHttpClient)
+    fun provideApollo(okHttpClient: OkHttpClient): KantoApi {
+        return buildRetrofit(okHttpClient).create(KantoApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkConnectivity(@ApplicationContext context: Context): NetworkConnectivity {
+        return NetworkConnectivity(context)
     }
 }

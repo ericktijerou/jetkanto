@@ -7,4 +7,7 @@
     <string name="label_profile">Profile</string>
     <string name="label_avatar">Avatar</string>
     <string name="label_edit_profile">Edit profile</string>
+    <string name="label_followers">Followers</string>
+    <string name="label_followed">Followed</string>
+    <string name="label_views">Views</string>
 </resources>

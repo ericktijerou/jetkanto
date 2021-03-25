@@ -36,6 +36,7 @@ import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
 import com.ericktijerou.jetkanto.ui.util.MainSection
 import com.ericktijerou.jetkanto.ui.util.ThemedPreview
+import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 
 @Composable
 fun MainScreen() {
@@ -62,6 +63,8 @@ fun MainScreen() {
             modifier = modifier.fillMaxSize()
         )
     }
+    val viewModel: MainViewModel by hiltViewModel()
+    viewModel.syncData()
 }
 
 @Composable

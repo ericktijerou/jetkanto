@@ -44,6 +44,6 @@ class SyncRecordUseCase @Inject constructor(private val workManager: WorkManager
         .build()
 
     companion object {
-        const val SYNC_TASK_NAME = "task_session"
+        const val SYNC_TASK_NAME = "task_record"
     }
 }

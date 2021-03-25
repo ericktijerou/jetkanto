@@ -16,11 +16,8 @@
 package com.ericktijerou.jetkanto.ui.component
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.progressSemantics
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ProgressIndicatorDefaults
 import androidx.compose.runtime.Composable
@@ -61,7 +58,6 @@ fun Avatar(
         image(maxWidth - 40.dp)
     }
 }
-
 
 @Composable
 fun CircleAvatar(modifier: Modifier, color: Color) {

@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto
+package com.ericktijerou.jetkanto.ui.entity
 
-import android.app.Application
-import android.util.Log
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import com.ericktijerou.jetkanto.core.EMPTY
+import com.ericktijerou.jetkanto.core.ZERO
+import com.ericktijerou.jetkanto.domain.entity.User
 
-@HiltAndroidApp
-class App : Application(), Configuration.Provider {
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
+fun User.toView() = UserView(id, name, username, avatar, bio, followers, followed, views)
 
-    override fun getWorkManagerConfiguration() =
-        Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .setMinimumLoggingLevel(Log.DEBUG)
-            .build()
+fun UserView?.orEmpty(): UserView {
+    return this ?: UserView(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, ZERO, ZERO, ZERO)
 }
