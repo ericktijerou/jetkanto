@@ -22,17 +22,12 @@ import com.ericktijerou.jetkanto.ui.entity.RecordView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 
 @Composable
-fun RecordList(modifier: Modifier = Modifier, list: List<RecordView>, state: LazyListState) {
-    LazyColumn(modifier = modifier, state = state) {
-        item {
-            Box(Modifier.padding(top = headerExpandedHeight))
+fun RecordList(modifier: Modifier = Modifier, list: List<RecordView>) {
+    Column(modifier = modifier) {
+        Box(Modifier.padding(top = headerExpandedHeight))
+        list.forEach {
+            RecordCard(record = it)
         }
-        items(
-            items = list,
-            itemContent = { record ->
-                RecordCard(record = record)
-            }
-        )
     }
 }
 
@@ -51,7 +46,11 @@ fun RecordCard(record: RecordView) {
             modifier = Modifier.padding(16.dp)
         ) {
             val context = LocalContext.current
-            Text(text = "Foo", modifier = Modifier.padding(16.dp), color = KantoTheme.customColors.textPrimaryColor)
+            Text(
+                text = "Foo",
+                modifier = Modifier.padding(16.dp),
+                color = KantoTheme.customColors.textPrimaryColor
+            )
             Column {
                 KantoPlayer(context, record.videoUrl, false)
             }
