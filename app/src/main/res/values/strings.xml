@@ -11,4 +11,6 @@
     <string name="label_followed">Followed</string>
     <string name="label_views">Views</string>
     <string name="label_settings">Settings</string>
+    <string name="label_sang">sang</string>
+    <string name="label_video_icon">Video icon</string>
 </resources>

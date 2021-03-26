@@ -38,7 +38,6 @@ private val DarkColorPalette = darkColors(
     primaryVariant = BlackLight,
     background = BackgroundDark,
     surface = BlackLight,
-    onPrimary = BlackLight
 )
 
 private val LightColorPalette = lightColors(
@@ -46,20 +45,19 @@ private val LightColorPalette = lightColors(
     primaryVariant = Color.White,
     background = BackgroundLight,
     surface = Color.White,
-    onPrimary = Color.White
 )
 
 private val LightPuppyColorPalette = KantoColors(
     textPrimaryColor = Color.Black,
     textSecondaryColor = TextSecondaryLight,
-    searchBoxColor = GraySearchBoxLight,
+    videoCardColor = Color.White,
     isDark = false
 )
 
 private val DarkPuppyColorPalette = KantoColors(
     textPrimaryColor = Color.White,
     textSecondaryColor = TextSecondaryDark,
-    searchBoxColor = GraySearchBoxDark,
+    videoCardColor = GrayCardDark,
     isDark = true
 )
 
@@ -103,14 +101,14 @@ object KantoTheme {
 class KantoColors(
     textPrimaryColor: Color,
     textSecondaryColor: Color,
-    searchBoxColor: Color,
+    videoCardColor: Color,
     isDark: Boolean
 ) {
     var textPrimaryColor by mutableStateOf(textPrimaryColor)
         private set
     var textSecondaryColor by mutableStateOf(textSecondaryColor)
         private set
-    var searchBoxColor by mutableStateOf(searchBoxColor)
+    var videoCardColor by mutableStateOf(videoCardColor)
         private set
     var isDark by mutableStateOf(isDark)
         private set
@@ -118,7 +116,7 @@ class KantoColors(
     fun update(other: KantoColors) {
         textPrimaryColor = other.textPrimaryColor
         textSecondaryColor = other.textSecondaryColor
-        searchBoxColor = other.searchBoxColor
+        videoCardColor = other.videoCardColor
         isDark = other.isDark
     }
 }

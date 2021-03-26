@@ -18,8 +18,7 @@ package com.ericktijerou.jetkanto.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val BlackLight = Color(0xFF161617)
-val GraySearchBoxLight = Color(0xFFF2F3F5)
-val GraySearchBoxDark = Color(0xFF1F1F1F)
+val GrayCardDark = Color(0xFF222222)
 val BackgroundLight = Color(0xFFF2F3F5)
 val BackgroundDark = Color(0xFF0A0A0A)
 val TextSecondaryLight = Color(0xFF747577)
