@@ -94,6 +94,10 @@ object Libs {
         const val coil = "dev.chrisbanes.accompanist:accompanist-coil:$version"
         const val insets = "dev.chrisbanes.accompanist:accompanist-insets:$version"
     }
+
+    object ExoPlayer {
+        const val core = "com.google.android.exoplayer:exoplayer:${Versions.exoplayer}"
+    }
 }
 
 object ClassPaths {
@@ -148,6 +152,7 @@ object Versions {
     internal const val retrofitKotlinxVersion = "0.4.0"
     internal const val dataStore = "1.0.0-alpha08"
     internal const val workManager = "2.5.0"
+    internal const val exoplayer = "2.12.3"
     const val kotlin = "1.4.31"
     const val apollo = "2.5.3"
     const val compose = "1.0.0-beta02"

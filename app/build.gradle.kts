@@ -167,4 +167,5 @@ dependencies {
 
     implementation(Libs.DataStore.preferences)
     implementation(Libs.WorkManager.runtime)
+    implementation(Libs.ExoPlayer.core)
 }

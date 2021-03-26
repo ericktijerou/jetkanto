@@ -19,6 +19,10 @@ import android.app.Application
 import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.ericktijerou.jetkanto.core.isNull
+import com.google.android.exoplayer2.database.ExoDatabaseProvider
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -27,9 +31,30 @@ class App : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    override fun onCreate() {
+        super.onCreate()
+        if (leastRecentlyUsedCacheEvictor.isNull()) {
+            leastRecentlyUsedCacheEvictor = LeastRecentlyUsedCacheEvictor(exoPlayerCacheSize)
+        }
+        exoDatabaseProvider = ExoDatabaseProvider(this)
+        if (simpleCache.isNull()) {
+            simpleCache =
+                leastRecentlyUsedCacheEvictor?.let {
+                    SimpleCache(cacheDir, it, exoDatabaseProvider)
+                }
+        }
+    }
+
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .setMinimumLoggingLevel(Log.DEBUG)
             .build()
+
+    companion object {
+        var simpleCache: SimpleCache? = null
+        var leastRecentlyUsedCacheEvictor: LeastRecentlyUsedCacheEvictor? = null
+        lateinit var exoDatabaseProvider: ExoDatabaseProvider
+        var exoPlayerCacheSize: Long = 90 * 1024 * 1024
+    }
 }

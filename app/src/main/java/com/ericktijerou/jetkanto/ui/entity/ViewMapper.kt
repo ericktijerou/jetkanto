@@ -17,6 +17,7 @@ package com.ericktijerou.jetkanto.ui.entity
 
 import com.ericktijerou.jetkanto.core.EMPTY
 import com.ericktijerou.jetkanto.core.ZERO
+import com.ericktijerou.jetkanto.domain.entity.Record
 import com.ericktijerou.jetkanto.domain.entity.User
 
 fun User.toView() = UserView(id, name, username, avatar, bio, followers, followed, views)
@@ -24,3 +25,13 @@ fun User.toView() = UserView(id, name, username, avatar, bio, followers, followe
 fun UserView?.orEmpty(): UserView {
     return this ?: UserView(EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, ZERO, ZERO, ZERO)
 }
+
+fun Record.toView() = RecordView(
+    ownerName = user.name,
+    ownerUsername = user.username,
+    ownerAvatar = user.avatar,
+    songName = songName,
+    videoUrl = videoUrl,
+    preview = preview,
+    likeCount = likeCount
+)

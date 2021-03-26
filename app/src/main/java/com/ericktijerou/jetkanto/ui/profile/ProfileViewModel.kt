@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ericktijerou.jetkanto.domain.usecase.record.GetRecordUseCase
 import com.ericktijerou.jetkanto.domain.usecase.session.GetSessionUseCase
+import com.ericktijerou.jetkanto.ui.entity.RecordView
 import com.ericktijerou.jetkanto.ui.entity.UserView
 import com.ericktijerou.jetkanto.ui.entity.toView
 import com.ericktijerou.jetkanto.ui.util.shareWhileObserved
@@ -39,6 +40,12 @@ class ProfileViewModel @Inject constructor(
     val session: SharedFlow<UserView> = getSessionUseCase.invoke()
         .distinctUntilChanged()
         .map { it.toView() }
+        .flowOn(Dispatchers.IO)
+        .shareWhileObserved(viewModelScope)
+
+    val records: SharedFlow<List<RecordView>> = getRecordUseCase.invoke()
+        .distinctUntilChanged()
+        .map { list -> list.map { it.toView() } }
         .flowOn(Dispatchers.IO)
         .shareWhileObserved(viewModelScope)
 }

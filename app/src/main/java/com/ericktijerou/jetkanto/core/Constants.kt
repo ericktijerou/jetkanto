@@ -15,5 +15,9 @@
  */
 package com.ericktijerou.jetkanto.core
 
+import androidx.compose.ui.unit.dp
+
 const val EMPTY = ""
 const val ZERO = 0
+val headerExpandedHeight = 330.dp
+val headerCollapsedHeight = 56.dp

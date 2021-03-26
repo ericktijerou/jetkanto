@@ -17,14 +17,14 @@ package com.ericktijerou.jetkanto.ui.component
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -36,21 +36,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
+import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.PurpleDark
 import com.ericktijerou.jetkanto.ui.theme.PurpleLight
@@ -59,22 +58,27 @@ import com.ericktijerou.jetkanto.ui.theme.PurpleLight
 fun CollapsingScrollTopBar(
     expandedHeight: Dp,
     header: @Composable (scrollProgress: Float, scrollY: Float) -> Unit,
-    scrollContent: @Composable (state: ScrollState) -> Unit,
+    scrollContent: @Composable (state: LazyListState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
-        val scrollState = rememberScrollState()
-        val scrollProgress = calculateScrollProgress(expandedHeight, scrollState)
-
-        scrollContent(scrollState)
-        header(scrollProgress, scrollState.value.toFloat())
+        val heightPx = with(LocalDensity.current) { expandedHeight.toPx() }
+        val state = rememberLazyListState()
+        val scrollProgress = calculateScrollProgress(heightPx, state)
+        scrollContent(state)
+        val scrollY =
+            if (state.firstVisibleItemIndex > 0) heightPx else state.firstVisibleItemScrollOffset.toFloat()
+        header(scrollProgress, scrollY)
     }
 }
 
 @Composable
-private fun calculateScrollProgress(height: Dp, state: ScrollState): Float {
-    val heightPx = with(LocalDensity.current) { height.toPx() }
-    return kotlin.math.max(0f, 1f - state.value / heightPx)
+private fun calculateScrollProgress(heightPx: Float, state: LazyListState): Float {
+    return if (state.firstVisibleItemIndex > 0) {
+        0f
+    } else {
+        kotlin.math.max(0f, 1f - state.firstVisibleItemScrollOffset / heightPx)
+    }
 }
 
 @Composable
@@ -86,9 +90,7 @@ fun CollapsingTopBarHeader(
     onCloseClicked: () -> Unit,
     expandedElevation: Dp = 0.dp,
     collapsedElevation: Dp = 0.dp,
-    expandedStartPadding: Dp = 8.dp,
-    collapsedStartPadding: Dp = 8.dp + 40.dp,
-    titleSize: TextUnit = MaterialTheme.typography.h6.fontSize,
+    titleSize: TextUnit = MaterialTheme.typography.subtitle1.fontSize,
     topBarColor: Color = MaterialTheme.colors.primary,
     topBarTintExpandedColor: Color = MaterialTheme.colors.onBackground,
     topBarTintCollapsedColor: Color = MaterialTheme.colors.onPrimary,
@@ -152,9 +154,10 @@ fun CollapsingTopBarHeader(
                     ) {
                         Text(
                             text = title,
-                            style = MaterialTheme.typography.h4.copy(
+                            style = MaterialTheme.typography.subtitle1.copy(
                                 fontSize = titleSize,
-                                color = topBarTintColor
+                                color = topBarTintColor,
+                                fontWeight = FontWeight.Bold
                             ),
                             modifier = Modifier.padding(start = 16.dp)
                         )
@@ -171,7 +174,7 @@ fun CollapsingTopBarHeader(
                     ) {
                         Icon(
                             Icons.Filled.Settings,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(R.string.label_settings),
                             tint = topBarTintColor
                         )
                     }
@@ -196,15 +199,6 @@ private fun calculateElevation(
     return max(calculatedElevation, collapsedElevation)
 }
 
-private fun calculateStartPadding(
-    scrollProgress: Float,
-    expandedStartPadding: Dp,
-    collapsedStartPadding: Dp
-): Dp {
-    val difference = expandedStartPadding - collapsedStartPadding
-    return collapsedStartPadding + difference * scrollProgress
-}
-
 private fun calculateRadius(
     scrollProgress: Float,
     expandedRadius: Dp,
@@ -212,15 +206,6 @@ private fun calculateRadius(
 ): Dp {
     val difference = expandedRadius - collapsedRadius
     return collapsedRadius + difference * scrollProgress
-}
-
-private fun calculateTitleSizeScale(
-    scrollProgress: Float,
-    expandedTitleSize: TextUnit,
-    collapsedTitleSize: TextUnit
-): Float {
-    val difference = collapsedTitleSize.value / expandedTitleSize.value
-    return difference + ((1f - difference) * scrollProgress)
 }
 
 private fun calculateTopBarColor(scrollProgress: Float, color: Color): Color {
@@ -249,22 +234,3 @@ fun colorOnBooleanAnimation(
     }
     return animatedColor.value
 }
-
-fun Modifier.scrim(colors: List<Color>): Modifier = drawWithContent {
-    drawContent()
-    drawRect(Brush.verticalGradient(colors))
-}
-
-@Stable
-fun Modifier.scale(
-    scale: Float,
-    pivotX: Float = centerX,
-    pivotY: Float = centerY,
-) = graphicsLayer(
-    scaleX = scale,
-    scaleY = scale,
-    transformOrigin = TransformOrigin(pivotX, pivotY)
-)
-
-private const val centerX = 0.5f
-private const val centerY = 0.5f

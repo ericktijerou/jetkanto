@@ -10,4 +10,5 @@
     <string name="label_followers">Followers</string>
     <string name="label_followed">Followed</string>
     <string name="label_views">Views</string>
+    <string name="label_settings">Settings</string>
 </resources>

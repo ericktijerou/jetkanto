@@ -59,6 +59,7 @@ val typography = typographyFromDefaults(
     subtitle1 = TextStyle(
         fontFamily = fonts,
         fontWeight = FontWeight.Medium,
+        letterSpacing = 0.sp
     ),
     subtitle2 = TextStyle(
         fontFamily = fonts,
