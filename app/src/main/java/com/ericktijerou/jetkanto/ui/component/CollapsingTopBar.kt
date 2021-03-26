@@ -58,14 +58,14 @@ import com.ericktijerou.jetkanto.ui.theme.PurpleLight
 fun CollapsingScrollTopBar(
     expandedHeight: Dp,
     header: @Composable (scrollProgress: Float, scrollY: Float) -> Unit,
-    scrollContent: @Composable (state: LazyListState) -> Unit,
+    scrollContent: @Composable (scrollProgress: Float, state: LazyListState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
         val heightPx = with(LocalDensity.current) { expandedHeight.toPx() }
         val state = rememberLazyListState()
         val scrollProgress = calculateScrollProgress(heightPx, state)
-        scrollContent(state)
+        scrollContent(scrollProgress, state)
         val scrollY = if (state.firstVisibleItemIndex > 0) {
             heightPx
         } else {

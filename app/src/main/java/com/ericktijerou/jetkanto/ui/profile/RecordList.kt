@@ -15,6 +15,7 @@
  */
 package com.ericktijerou.jetkanto.ui.profile
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,6 +41,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.runtime.Composable
@@ -47,7 +50,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -67,7 +72,7 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RecordList(modifier: Modifier = Modifier, list: List<RecordView>, scrollState: LazyListState) {
+fun RecordList(modifier: Modifier = Modifier, list: List<RecordView>, scrollState: LazyListState, autoPlay: Boolean) {
     LazyColumn(state = scrollState, modifier = modifier) {
         stickyHeader {
             Box(Modifier.padding(top = headerExpandedHeight))
@@ -75,7 +80,8 @@ fun RecordList(modifier: Modifier = Modifier, list: List<RecordView>, scrollStat
         itemsIndexed(
             items = list,
             itemContent = { index, record ->
-                RecordCard(record = record, false)
+                val focused = autoPlay && index == scrollState.firstVisibleItemIndex
+                RecordCard(record = record, focused)
             }
         )
         item {
@@ -141,14 +147,18 @@ fun PlayerWithControls(record: RecordView, modifier: Modifier = Modifier, focuse
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-
     Box(modifier = modifier) {
-        KantoPlayer(
-            videoPlayerController = videoPlayerController,
-            backgroundColor = Color.Transparent,
-            modifier = Modifier.fillMaxWidth(),
-            controlsEnabled = true
-        )
+        if (focused) {
+            KantoPlayer(
+                videoPlayerController = videoPlayerController,
+                backgroundColor = Color.Transparent,
+                modifier = Modifier.fillMaxWidth(),
+                controlsEnabled = false
+            )
+        } else {
+            videoPlayerController.pause()
+            VideoPreview(modifier = Modifier.fillMaxSize(), previewUrl = record.preview)
+        }
         Icon(
             imageVector = Icons.Outlined.Videocam,
             contentDescription = stringResource(R.string.label_video_icon),
@@ -170,6 +180,36 @@ fun PlayerWithControls(record: RecordView, modifier: Modifier = Modifier, focuse
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(8.dp)
+        )
+    }
+}
+
+@Composable
+fun VideoPreview(modifier: Modifier, previewUrl: String) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        CoilImage(
+            data = previewUrl,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            contentDescription = stringResource(
+                R.string.label_video_preview
+            )
+        )
+        Canvas(modifier = Modifier.size(64.dp)) {
+            val canvasWidth = size.width
+            val canvasHeight = size.height
+            drawCircle(
+                color = Color.Black.copy(alpha = 0.2f),
+                center = Offset(x = canvasWidth / 2, y = canvasHeight / 2),
+                radius = size.minDimension / 2
+            )
+        }
+        Icon(
+            imageVector = Icons.Filled.PlayArrow,
+            contentDescription = stringResource(
+                R.string.label_video_preview
+            ),
+            modifier = Modifier.size(48.dp)
         )
     }
 }

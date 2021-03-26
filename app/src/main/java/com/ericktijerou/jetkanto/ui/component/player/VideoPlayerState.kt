@@ -16,7 +16,7 @@
 package com.ericktijerou.jetkanto.ui.component.player
 
 data class VideoPlayerState(
-    val isPlaying: Boolean = false,
+    val isPlaying: Boolean = true,
     val controlsVisible: Boolean = true,
     val controlsEnabled: Boolean = true,
     val duration: Long = 1L,

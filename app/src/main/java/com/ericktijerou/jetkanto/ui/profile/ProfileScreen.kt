@@ -65,13 +65,14 @@ fun ProfileScreen(modifier: Modifier) {
                 )
             }
         },
-        scrollContent = { scrollState ->
+        scrollContent = { scrollProgress, scrollState ->
             val records = viewModel.records.collectAsState(initial = null).value
             records?.let {
                 RecordList(
                     list = it,
                     modifier = Modifier.fillMaxWidth(),
-                    scrollState = scrollState
+                    scrollState = scrollState,
+                    autoPlay = scrollProgress < 0.6f
                 )
             }
         },
