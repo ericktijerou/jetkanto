@@ -155,6 +155,6 @@ object Versions {
     internal const val exoplayer = "2.12.3"
     const val kotlin = "1.4.31"
     const val apollo = "2.5.3"
-    const val compose = "1.0.0-beta02"
+    const val compose = "1.0.0-beta03"
     const val ktlint = "0.40.0"
 }

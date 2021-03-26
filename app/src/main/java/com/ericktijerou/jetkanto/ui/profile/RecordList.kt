@@ -52,7 +52,9 @@ fun RecordCard(record: RecordView) {
         ) {
             val context = LocalContext.current
             Text(text = "Foo", modifier = Modifier.padding(16.dp), color = KantoTheme.customColors.textPrimaryColor)
-            KantoPlayer(context, record.videoUrl, false)
+            Column {
+                KantoPlayer(context, record.videoUrl, false)
+            }
         }
     }
 }
