@@ -15,19 +15,24 @@
  */
 package com.ericktijerou.jetkanto.ui.main
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.KEY_ROUTE
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
+import androidx.navigation.compose.rememberNavController
 import com.ericktijerou.jetkanto.ui.community.CommunityScreen
-import com.ericktijerou.jetkanto.ui.component.Pager
-import com.ericktijerou.jetkanto.ui.component.PagerState
 import com.ericktijerou.jetkanto.ui.explore.ExploreScreen
 import com.ericktijerou.jetkanto.ui.notification.NotificationListScreen
 import com.ericktijerou.jetkanto.ui.profile.ProfileScreen
@@ -48,43 +53,23 @@ fun MainScreen() {
         MainSection.Notification,
         MainSection.Profile
     )
-    val pagerState = remember { PagerState() }
+    val navController = rememberNavController()
     Scaffold(
         bottomBar = {
             HomeBottomNavigation(
                 sections = sections,
-                pagerState = pagerState
+                navController = navController
             )
         }
     ) { innerPadding ->
-        val modifier = Modifier.padding(innerPadding)
         viewModel.syncData()
-        HomeViewPager(
-            items = sections,
-            pagerState = pagerState,
-            modifier = modifier.fillMaxSize()
-        )
-    }
-}
-
-@Composable
-fun HomeViewPager(
-    items: List<MainSection>,
-    modifier: Modifier = Modifier,
-    pagerState: PagerState = remember { PagerState() },
-) {
-    pagerState.maxPage = (items.size - 1).coerceAtLeast(0)
-    Pager(
-        state = pagerState,
-        modifier = modifier,
-        userInputEnabled = false
-    ) {
-        when (items[page]) {
-            is MainSection.Community -> CommunityScreen()
-            is MainSection.Explore -> ExploreScreen()
-            is MainSection.Song -> SongListScreen()
-            is MainSection.Notification -> NotificationListScreen()
-            is MainSection.Profile -> ProfileScreen()
+        val modifier = Modifier.padding(innerPadding)
+        NavHost(navController = navController, startDestination = MainSection.Song.route) {
+            composable(MainSection.Community.route) { CommunityScreen(modifier = modifier) }
+            composable(MainSection.Explore.route) { ExploreScreen(modifier = modifier) }
+            composable(MainSection.Song.route) { SongListScreen(modifier = modifier) }
+            composable(MainSection.Notification.route) { NotificationListScreen(modifier = modifier) }
+            composable(MainSection.Profile.route) { ProfileScreen(modifier = modifier) }
         }
     }
 }
@@ -92,14 +77,20 @@ fun HomeViewPager(
 @Composable
 fun HomeBottomNavigation(
     sections: List<MainSection>,
-    pagerState: PagerState = remember { PagerState() }
+    navController: NavHostController
 ) {
     BottomNavigation {
-        sections.forEachIndexed { index, section ->
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
+        sections.forEach { section ->
             BottomNavigationItem(
                 icon = { Icon(imageVector = section.icon, contentDescription = section.route) },
-                selected = pagerState.currentPage == index,
-                onClick = { pagerState.currentPage = index },
+                selected = currentRoute == section.route,
+                onClick = {
+                    navController.navigate(route = section.route) {
+                        popUpTo(currentRoute.orEmpty()) { inclusive = true }
+                    }
+                },
                 selectedContentColor = Teal500,
                 alwaysShowLabel = false,
                 unselectedContentColor = KantoTheme.customColors.textSecondaryColor

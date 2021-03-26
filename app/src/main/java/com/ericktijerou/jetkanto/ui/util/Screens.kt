@@ -28,9 +28,9 @@ sealed class Screens(val route: String) {
 }
 
 sealed class MainSection(val route: String, val icon: ImageVector) {
-    object Community : MainSection("user", Icons.Filled.Home)
-    object Explore : MainSection("repo", Icons.Filled.PlayCircleOutline)
-    object Song : MainSection("repo", Icons.Filled.MusicVideo)
-    object Notification : MainSection("repo", Icons.Filled.Notifications)
-    object Profile : MainSection("repo", Icons.Filled.Person)
+    object Community : MainSection("community", Icons.Filled.Home)
+    object Explore : MainSection("explore", Icons.Filled.PlayCircleOutline)
+    object Song : MainSection("song", Icons.Filled.MusicVideo)
+    object Notification : MainSection("notification", Icons.Filled.Notifications)
+    object Profile : MainSection("profile", Icons.Filled.Person)
 }

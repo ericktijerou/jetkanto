@@ -20,7 +20,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,7 +35,7 @@ import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(modifier: Modifier) {
     val viewModel: ProfileViewModel by hiltViewModel()
     CollapsingScrollTopBar(
         expandedHeight = headerExpandedHeight,
@@ -76,6 +75,6 @@ fun ProfileScreen() {
                 )
             }
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     )
 }

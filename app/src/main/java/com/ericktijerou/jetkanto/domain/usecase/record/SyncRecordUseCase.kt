@@ -16,23 +16,26 @@
 package com.ericktijerou.jetkanto.domain.usecase.record
 
 import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ericktijerou.jetkanto.data.worker.RecordSyncWorker
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SyncRecordUseCase @Inject constructor(private val workManager: WorkManager) {
     operator fun invoke(): UUID {
-        val recordSyncWorker = OneTimeWorkRequestBuilder<RecordSyncWorker>()
+        val recordSyncWorker = PeriodicWorkRequestBuilder<RecordSyncWorker>(7L, TimeUnit.DAYS)
             .setConstraints(getRequiredConstraints())
             .build()
 
-        workManager.enqueueUniqueWork(
+        workManager.enqueueUniquePeriodicWork(
             SYNC_TASK_NAME,
-            ExistingWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.REPLACE,
             recordSyncWorker
         )
 

@@ -27,9 +27,9 @@ import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 
 @Composable
-fun CommunityScreen() {
+fun CommunityScreen(modifier: Modifier) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
