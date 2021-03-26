@@ -30,16 +30,15 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.ericktijerou.jetkanto.ui.component.player.LocalVideoPlayerController
+import com.ericktijerou.jetkanto.ui.component.player.DefaultVideoPlayerController
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 
 @Composable
 fun KantoProgressIndicator(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    controller: DefaultVideoPlayerController
 ) {
-    val controller = LocalVideoPlayerController.current
     val videoPlayerUiState by controller.collect()
-
     with(videoPlayerUiState) {
         val progress = currentPosition.coerceAtMost(duration).toFloat() / duration.toFloat()
         ProgressIndicator(

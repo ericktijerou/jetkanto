@@ -24,11 +24,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -37,45 +34,34 @@ import com.ericktijerou.jetkanto.ui.component.KantoProgressIndicator
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
 
-val LocalVideoPlayerController =
-    compositionLocalOf<DefaultVideoPlayerController> { error("VideoPlayerController is not initialized") }
-
 @OptIn(ExperimentalUnsignedTypes::class)
 @Composable
 fun KantoPlayer(
-    videoPlayerController: VideoPlayerController,
+    videoPlayerController: DefaultVideoPlayerController,
     modifier: Modifier = Modifier,
     controlsEnabled: Boolean = true,
     backgroundColor: Color = Color.Black
 ) {
-    require(videoPlayerController is DefaultVideoPlayerController) {
-        "Use [rememberVideoPlayerController] to create an instance of [VideoPlayerController]"
-    }
-
     SideEffect {
         videoPlayerController.videoPlayerBackgroundColor = backgroundColor.value.toInt()
         videoPlayerController.enableControls(controlsEnabled)
     }
-
-    CompositionLocalProvider(
-        LocalContentColor provides Color.White,
-        LocalVideoPlayerController provides videoPlayerController
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            KantoProgressIndicator(modifier = Modifier.fillMaxWidth())
-            Spacer(modifier = Modifier.height(2.dp))
-            Box(
-                modifier = Modifier
-                    .background(color = backgroundColor)
-                    .fillMaxSize()
-                    .then(modifier)
-            ) {
-                PlayerSurface {
-                    videoPlayerController.playerViewAvailable(it)
-                }
-
-                MediaControlButtons(modifier = Modifier.matchParentSize())
+    Column(modifier = Modifier.fillMaxWidth()) {
+        KantoProgressIndicator(modifier = Modifier.fillMaxWidth(), controller = videoPlayerController)
+        Spacer(modifier = Modifier.height(0.5.dp))
+        Box(
+            modifier = Modifier
+                .background(color = backgroundColor)
+                .fillMaxSize()
+                .then(modifier)
+        ) {
+            PlayerSurface {
+                videoPlayerController.playerViewAvailable(it)
             }
+            MediaControlButtons(
+                modifier = Modifier.matchParentSize(),
+                controller = videoPlayerController
+            )
         }
     }
 }

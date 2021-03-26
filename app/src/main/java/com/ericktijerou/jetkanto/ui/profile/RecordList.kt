@@ -15,12 +15,15 @@
  */
 package com.ericktijerou.jetkanto.ui.profile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -62,18 +65,22 @@ import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
 import dev.chrisbanes.accompanist.coil.CoilImage
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecordList(modifier: Modifier = Modifier, list: List<RecordView>, scrollState: LazyListState) {
-    LazyColumn(modifier = modifier.padding(vertical = 8.dp), state = scrollState) {
-        item {
+    LazyColumn(state = scrollState, modifier = modifier) {
+        stickyHeader {
             Box(Modifier.padding(top = headerExpandedHeight))
         }
         itemsIndexed(
             items = list,
             itemContent = { index, record ->
-                RecordCard(record = record, index == scrollState.firstVisibleItemIndex)
+                RecordCard(record = record, false)
             }
         )
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }
 
@@ -83,7 +90,7 @@ fun RecordCard(record: RecordView, focused: Boolean) {
         shape = RoundedCornerShape(16.dp),
         backgroundColor = KantoTheme.customColors.videoCardColor,
         modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .padding(start = 12.dp, end = 12.dp, top = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight(),
         elevation = 0.dp
@@ -122,7 +129,6 @@ fun PlayerWithControls(record: RecordView, modifier: Modifier = Modifier, focuse
         setVideoUrl(record.videoUrl)
     }
     val lifecycleOwner = LocalLifecycleOwner.current
-
     DisposableEffect(videoPlayerController, lifecycleOwner) {
         val observer = object : DefaultLifecycleObserver {
             override fun onPause(owner: LifecycleOwner) {

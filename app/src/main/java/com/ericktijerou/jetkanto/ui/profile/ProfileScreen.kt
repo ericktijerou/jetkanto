@@ -71,9 +71,7 @@ fun ProfileScreen() {
             records?.let {
                 RecordList(
                     list = it,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
+                    modifier = Modifier.fillMaxWidth(),
                     scrollState = scrollState
                 )
             }
