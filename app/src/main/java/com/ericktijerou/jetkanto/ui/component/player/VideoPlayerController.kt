@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto.core
+package com.ericktijerou.jetkanto.ui.component.player
 
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-fun Int?.orZero() = this ?: ZERO
-fun Long?.orZero() = this ?: ZERO.toLong()
-fun Any?.isNull(): Boolean = this == null
-fun <T> MutableStateFlow<T>.set(block: T.() -> T) {
-    this.value = this.value.block()
+interface VideoPlayerController {
+    fun setVideoUrl(url: String)
+
+    fun play()
+
+    fun pause()
+
+    fun playPauseToggle()
+
+    fun reset()
+
+    val state: StateFlow<VideoPlayerState>
 }

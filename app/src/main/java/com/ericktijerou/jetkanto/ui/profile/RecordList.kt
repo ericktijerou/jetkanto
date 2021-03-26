@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.ericktijerou.jetkanto.ui.profile
 
 import androidx.compose.foundation.border
@@ -9,6 +24,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -18,39 +36,49 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.VideoCameraBack
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.core.headerExpandedHeight
-import com.ericktijerou.jetkanto.ui.component.KantoPlayer
-import com.ericktijerou.jetkanto.ui.component.KantoProgressIndicator
+import com.ericktijerou.jetkanto.ui.component.player.DefaultVideoPlayerController
+import com.ericktijerou.jetkanto.ui.component.player.KantoPlayer
+import com.ericktijerou.jetkanto.ui.component.player.VideoPlayerState
 import com.ericktijerou.jetkanto.ui.entity.RecordView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
 import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
-fun RecordList(modifier: Modifier = Modifier, list: List<RecordView>) {
-    Column(modifier = modifier.padding(vertical = 8.dp)) {
-        Box(Modifier.padding(top = headerExpandedHeight))
-        list.forEach {
-            RecordCard(record = it)
+fun RecordList(modifier: Modifier = Modifier, list: List<RecordView>, scrollState: LazyListState) {
+    LazyColumn(modifier = modifier.padding(vertical = 8.dp), state = scrollState) {
+        item {
+            Box(Modifier.padding(top = headerExpandedHeight))
         }
+        itemsIndexed(
+            items = list,
+            itemContent = { index, record ->
+                RecordCard(record = record, index == scrollState.firstVisibleItemIndex)
+            }
+        )
     }
 }
 
 @Composable
-fun RecordCard(record: RecordView) {
+fun RecordCard(record: RecordView, focused: Boolean) {
     Card(
         shape = RoundedCornerShape(16.dp),
         backgroundColor = KantoTheme.customColors.videoCardColor,
@@ -67,6 +95,7 @@ fun RecordCard(record: RecordView) {
             )
             PlayerWithControls(
                 record = record,
+                focused = focused,
                 modifier = Modifier
                     .aspectRatio(1f)
                     .fillMaxWidth()
@@ -75,47 +104,67 @@ fun RecordCard(record: RecordView) {
                 likes = record.likeCount.toString(),
                 modifier = Modifier.padding(start = 8.dp),
                 onLikeClick = {},
-                isLiked = true
+                liked = true
             )
         }
     }
 }
 
 @Composable
-fun PlayerWithControls(record: RecordView, modifier: Modifier = Modifier) {
+fun PlayerWithControls(record: RecordView, modifier: Modifier = Modifier, focused: Boolean) {
     val context = LocalContext.current
-    Column(modifier = Modifier.fillMaxWidth()) {
-        KantoProgressIndicator(
-            progress = 0.5f,
-            color = KantoTheme.customColors.textPrimaryColor,
-            modifier = Modifier.fillMaxWidth(),
-            strokeWidth = 2.dp
-        )
-        Box(modifier = modifier) {
-            KantoPlayer(context, record.videoUrl, false)
-            Icon(
-                imageVector = Icons.Outlined.Videocam,
-                contentDescription = stringResource(R.string.label_video_icon),
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(8.dp)
-            )
-            Icon(
-                imageVector = Icons.Outlined.MoreVert,
-                contentDescription = stringResource(R.string.label_video_icon),
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 8.dp)
-            )
-            Text(
-                text = record.songName,
-                color = Color.White,
-                style = KantoTheme.typography.body1.copy(fontWeight = FontWeight.Black),
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(8.dp)
-            )
+    val coroutineScope = rememberCoroutineScope()
+    val videoPlayerController = DefaultVideoPlayerController(
+        context = context,
+        initialState = VideoPlayerState(),
+        coroutineScope = coroutineScope
+    ).apply {
+        setVideoUrl(record.videoUrl)
+    }
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(videoPlayerController, lifecycleOwner) {
+        val observer = object : DefaultLifecycleObserver {
+            override fun onPause(owner: LifecycleOwner) {
+                videoPlayerController.pause()
+            }
         }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    Box(modifier = modifier) {
+        KantoPlayer(
+            videoPlayerController = videoPlayerController,
+            backgroundColor = Color.Transparent,
+            modifier = Modifier.fillMaxWidth(),
+            controlsEnabled = true
+        )
+        Icon(
+            imageVector = Icons.Outlined.Videocam,
+            contentDescription = stringResource(R.string.label_video_icon),
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(8.dp)
+        )
+        Icon(
+            imageVector = Icons.Outlined.MoreVert,
+            contentDescription = stringResource(R.string.label_video_icon),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 8.dp)
+        )
+        Text(
+            text = record.songName,
+            color = Color.White,
+            style = KantoTheme.typography.body1.copy(fontWeight = FontWeight.Black),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(8.dp)
+        )
     }
 }
 
@@ -156,10 +205,10 @@ fun RecordHeader(record: RecordView, modifier: Modifier) {
 }
 
 @Composable
-fun RecordFooter(likes: String, modifier: Modifier, onLikeClick: () -> Unit, isLiked: Boolean) {
+fun RecordFooter(likes: String, modifier: Modifier, onLikeClick: () -> Unit, liked: Boolean) {
     IconButton(onClick = onLikeClick, modifier = modifier) {
-        val color = if (isLiked) Teal500 else KantoTheme.customColors.textPrimaryColor
-        val icon = if (isLiked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
+        val color = if (liked) Teal500 else KantoTheme.customColors.textPrimaryColor
+        val icon = if (liked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = icon,

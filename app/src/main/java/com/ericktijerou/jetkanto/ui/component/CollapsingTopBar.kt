@@ -17,7 +17,6 @@ package com.ericktijerou.jetkanto.ui.component
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +25,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -60,21 +58,30 @@ import com.ericktijerou.jetkanto.ui.theme.PurpleLight
 fun CollapsingScrollTopBar(
     expandedHeight: Dp,
     header: @Composable (scrollProgress: Float, scrollY: Float) -> Unit,
-    scrollContent: @Composable (state: ScrollState) -> Unit,
+    scrollContent: @Composable (state: LazyListState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
         val heightPx = with(LocalDensity.current) { expandedHeight.toPx() }
-        val state = rememberScrollState()
+        val state = rememberLazyListState()
         val scrollProgress = calculateScrollProgress(heightPx, state)
         scrollContent(state)
-        header(scrollProgress, state.value.toFloat())
+        val scrollY = if (state.firstVisibleItemIndex > 0) {
+            heightPx
+        } else {
+            state.firstVisibleItemScrollOffset.toFloat()
+        }
+        header(scrollProgress, scrollY)
     }
 }
 
 @Composable
-private fun calculateScrollProgress(heightPx: Float, state: ScrollState): Float {
-    return kotlin.math.max(0f, 1f - state.value / heightPx)
+private fun calculateScrollProgress(heightPx: Float, state: LazyListState): Float {
+    return if (state.firstVisibleItemIndex > 0) {
+        0f
+    } else {
+        kotlin.math.max(0f, 1f - state.firstVisibleItemScrollOffset / heightPx)
+    }
 }
 
 @Composable

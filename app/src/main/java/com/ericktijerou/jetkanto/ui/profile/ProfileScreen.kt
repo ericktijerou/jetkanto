@@ -21,7 +21,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -72,9 +71,10 @@ fun ProfileScreen() {
             records?.let {
                 RecordList(
                     list = it,
-                    modifier = Modifier.fillMaxWidth()
-                        .verticalScroll(scrollState)
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .wrapContentHeight(),
+                    scrollState = scrollState
                 )
             }
         },

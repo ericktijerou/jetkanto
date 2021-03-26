@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto.core
+package com.ericktijerou.jetkanto.ui.component.player
 
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.google.android.exoplayer2.Player
 
-fun Int?.orZero() = this ?: ZERO
-fun Long?.orZero() = this ?: ZERO.toLong()
-fun Any?.isNull(): Boolean = this == null
-fun <T> MutableStateFlow<T>.set(block: T.() -> T) {
-    this.value = this.value.block()
+enum class PlaybackState(val value: Int) {
+
+    IDLE(Player.STATE_IDLE),
+    BUFFERING(Player.STATE_BUFFERING),
+    READY(Player.STATE_READY),
+    ENDED(Player.STATE_ENDED);
+
+    companion object {
+        fun of(value: Int): PlaybackState {
+            return values().first { it.value == value }
+        }
+    }
 }
