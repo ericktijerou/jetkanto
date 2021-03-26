@@ -107,8 +107,14 @@ fun TopBarContent(modifier: Modifier = Modifier, session: UserView) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             val indicators = listOf(
-                Indicator(value = session.followers, label = stringResource(R.string.label_followers)),
-                Indicator(value = session.followed, label = stringResource(R.string.label_followed)),
+                Indicator(
+                    value = session.followers,
+                    label = stringResource(R.string.label_followers)
+                ),
+                Indicator(
+                    value = session.followed,
+                    label = stringResource(R.string.label_followed)
+                ),
                 Indicator(value = session.views, label = stringResource(R.string.label_views))
             )
             indicators.forEach {

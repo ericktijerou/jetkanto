@@ -104,7 +104,7 @@ class PagerState(
     }
 
     override fun toString(): String = "PagerState{minPage=$minPage, maxPage=$maxPage, " +
-        "currentPage=$currentPage, currentPageOffset=$currentPageOffset}"
+            "currentPage=$currentPage, currentPageOffset=$currentPageOffset}"
 }
 
 @Immutable

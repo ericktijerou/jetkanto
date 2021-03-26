@@ -65,10 +65,10 @@ private class SystemUiControllerImpl(private val window: Window) : SystemUiContr
             @Suppress("DEPRECATION")
             if (darkIcons) {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or
-                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             } else {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and
-                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
             }
         }
     }
@@ -88,10 +88,10 @@ private class SystemUiControllerImpl(private val window: Window) : SystemUiContr
             @Suppress("DEPRECATION")
             if (darkIcons) {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or
-                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+                        View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
             } else {
                 window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and
-                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
+                        View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR.inv()
             }
         }
     }
@@ -120,17 +120,20 @@ private object FakeSystemUiController : SystemUiController {
         color: Color,
         darkIcons: Boolean,
         transformColorForLightContent: (Color) -> Color
-    ) {}
+    ) {
+    }
 
     override fun setNavigationBarColor(
         color: Color,
         darkIcons: Boolean,
         transformColorForLightContent: (Color) -> Color
-    ) {}
+    ) {
+    }
 
     override fun setSystemBarsColor(
         color: Color,
         darkIcons: Boolean,
         transformColorForLightContent: (Color) -> Color
-    ) {}
+    ) {
+    }
 }
