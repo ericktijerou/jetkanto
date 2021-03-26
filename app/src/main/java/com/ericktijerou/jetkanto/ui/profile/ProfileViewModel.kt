@@ -23,8 +23,10 @@ import com.ericktijerou.jetkanto.ui.entity.UserView
 import com.ericktijerou.jetkanto.ui.entity.toView
 import com.ericktijerou.jetkanto.ui.util.shareWhileObserved
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -37,5 +39,6 @@ class ProfileViewModel @Inject constructor(
     val session: SharedFlow<UserView> = getSessionUseCase.invoke()
         .distinctUntilChanged()
         .map { it.toView() }
+        .flowOn(Dispatchers.IO)
         .shareWhileObserved(viewModelScope)
 }

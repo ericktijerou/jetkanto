@@ -40,6 +40,7 @@ import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 
 @Composable
 fun MainScreen() {
+    val viewModel: MainViewModel by hiltViewModel()
     val sections = listOf(
         MainSection.Community,
         MainSection.Explore,
@@ -57,14 +58,13 @@ fun MainScreen() {
         }
     ) { innerPadding ->
         val modifier = Modifier.padding(innerPadding)
+        viewModel.syncData()
         HomeViewPager(
             items = sections,
             pagerState = pagerState,
             modifier = modifier.fillMaxSize()
         )
     }
-    val viewModel: MainViewModel by hiltViewModel()
-    viewModel.syncData()
 }
 
 @Composable

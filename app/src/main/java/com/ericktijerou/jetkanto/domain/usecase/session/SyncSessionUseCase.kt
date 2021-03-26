@@ -16,23 +16,26 @@
 package com.ericktijerou.jetkanto.domain.usecase.session
 
 import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ericktijerou.jetkanto.data.worker.SessionSyncWorker
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SyncSessionUseCase @Inject constructor(private val workManager: WorkManager) {
     operator fun invoke(): UUID {
-        val sessionSyncWorker = OneTimeWorkRequestBuilder<SessionSyncWorker>()
+        val sessionSyncWorker = PeriodicWorkRequestBuilder<SessionSyncWorker>(1L, TimeUnit.DAYS)
             .setConstraints(getRequiredConstraints())
             .build()
 
-        workManager.enqueueUniqueWork(
+        workManager.enqueueUniquePeriodicWork(
             SYNC_TASK_NAME,
-            ExistingWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.REPLACE,
             sessionSyncWorker
         )
 

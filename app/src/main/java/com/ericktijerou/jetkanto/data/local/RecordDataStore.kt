@@ -33,6 +33,7 @@ class RecordDataStore @Inject constructor(
     }
 
     suspend fun saveRecordList(list: List<RecordModel>) {
+        recordDao.clearAll()
         recordDao.insertRecords(*list.map { it.toLocal() }.toTypedArray())
     }
 

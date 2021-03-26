@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.ericktijerou.jetkanto.domain.usecase.record.SyncRecordUseCase
 import com.ericktijerou.jetkanto.domain.usecase.session.SyncSessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,7 +34,7 @@ class MainViewModel @Inject constructor(
 
     fun syncData() {
         syncJob?.cancel()
-        syncJob = viewModelScope.launch {
+        syncJob = viewModelScope.launch(Dispatchers.IO) {
             syncSessionUseCase.invoke()
             syncRecordUseCase.invoke()
         }
