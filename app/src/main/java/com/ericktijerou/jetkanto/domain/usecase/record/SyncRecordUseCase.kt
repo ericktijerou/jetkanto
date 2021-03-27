@@ -17,9 +17,7 @@ package com.ericktijerou.jetkanto.domain.usecase.record
 
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.ericktijerou.jetkanto.data.worker.RecordSyncWorker

@@ -42,9 +42,9 @@ class NetworkConnectivity @Inject constructor(private val context: Context) {
         val connection =
             connectivityManager.getNetworkCapabilities(network)
         return connection != null && (
-                connection.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                        connection.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                )
+            connection.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                connection.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+            )
     }
 
     @Suppress("DEPRECATION")
@@ -55,9 +55,9 @@ class NetworkConnectivity @Inject constructor(private val context: Context) {
         if (activeNetwork != null) {
             @Suppress("DEPRECATION")
             return (
-                    activeNetwork.type == ConnectivityManager.TYPE_WIFI ||
-                            activeNetwork.type == ConnectivityManager.TYPE_MOBILE
-                    )
+                activeNetwork.type == ConnectivityManager.TYPE_WIFI ||
+                    activeNetwork.type == ConnectivityManager.TYPE_MOBILE
+                )
         }
         return false
     }
