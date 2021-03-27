@@ -18,7 +18,9 @@ package com.ericktijerou.jetkanto.ui
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
+import com.ericktijerou.jetkanto.ui.editprofile.EditProfileScreen
 import com.ericktijerou.jetkanto.ui.main.MainScreen
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.util.Screens
@@ -30,7 +32,14 @@ fun KantoApp() {
         KantoTheme {
             val navController = rememberNavController()
             NavHost(navController, startDestination = Screens.Main.route) {
-                composable(Screens.Main.route) { MainScreen() }
+                composable(Screens.Main.route) {
+                    MainScreen(goToEditProfile = {
+                        navController.navigate(route = Screens.EditProfile.route)
+                    })
+                }
+                composable(Screens.EditProfile.route) {
+                    EditProfileScreen(onBackPressed = { navController.navigateUp() })
+                }
             }
         }
     }

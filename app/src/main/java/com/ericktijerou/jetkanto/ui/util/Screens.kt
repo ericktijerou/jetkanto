@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screens(val route: String) {
     object Main : Screens("main")
+    object EditProfile : Screens("edit_profile")
 }
 
 sealed class MainSection(val route: String, val icon: ImageVector) {

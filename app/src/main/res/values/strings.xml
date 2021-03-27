@@ -6,7 +6,6 @@
     <string name="label_notifications">Notifications</string>
     <string name="label_profile">Profile</string>
     <string name="label_avatar">Avatar</string>
-    <string name="label_edit_profile">Edit profile</string>
     <string name="label_followers">Followers</string>
     <string name="label_followed">Followed</string>
     <string name="label_views">Views</string>
@@ -14,4 +13,10 @@
     <string name="label_sang">sang</string>
     <string name="label_video_icon">Video icon</string>
     <string name="label_video_preview">Video preview</string>
+    <string name="label_name">Name</string>
+    <string name="label_username">Username</string>
+    <string name="label_bio">Biography</string>
+    <string name="label_edit_profile">Edit profile</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_change_photo">Change photo</string>
 </resources>

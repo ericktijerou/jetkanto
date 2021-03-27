@@ -35,7 +35,7 @@ import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 
 @Composable
-fun ProfileScreen(modifier: Modifier) {
+fun ProfileScreen(modifier: Modifier, goToEditProfile: () -> Unit) {
     val viewModel: ProfileViewModel by hiltViewModel()
     CollapsingScrollTopBar(
         expandedHeight = headerExpandedHeight,
@@ -56,6 +56,7 @@ fun ProfileScreen(modifier: Modifier) {
                 )
                 TopBarContent(
                     session = session,
+                    goToEditProfile = goToEditProfile,
                     modifier = Modifier
                         .fillMaxSize()
                         .graphicsLayer {
