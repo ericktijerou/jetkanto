@@ -41,9 +41,9 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun MediaControlButtons(
-    modifier: Modifier = Modifier,
-    controller: DefaultVideoPlayerController
+    modifier: Modifier = Modifier
 ) {
+    val controller = LocalVideoPlayerController.current
     val controlsEnabled by controller.collect { controlsEnabled }
     val controlsVisible by controller.collect { controlsVisible }
     val (controlsExistOnUITree, setControlsExistOnUITree) = remember(controlsVisible) {
@@ -68,16 +68,16 @@ fun MediaControlButtons(
             modifier = Modifier
                 .alpha(appearAlpha.value)
                 .background(Color.Black.copy(alpha = appearAlpha.value * 0.6f))
-                .then(modifier),
-            controller = controller
+                .then(modifier)
         )
     }
 }
 
 @Composable
 private fun MediaControlButtonsContent(
-    modifier: Modifier = Modifier, controller: DefaultVideoPlayerController
+    modifier: Modifier = Modifier
 ) {
+    val controller = LocalVideoPlayerController.current
 
     Box(modifier = modifier) {
         Box(
@@ -90,12 +90,13 @@ private fun MediaControlButtonsContent(
                     controller.hideControls()
                 }
         )
-        PlayPauseButton(modifier = Modifier.align(Alignment.Center), controller = controller)
+        PlayPauseButton(modifier = Modifier.align(Alignment.Center))
     }
 }
 
 @Composable
-fun PlayPauseButton(modifier: Modifier = Modifier, controller: DefaultVideoPlayerController) {
+fun PlayPauseButton(modifier: Modifier = Modifier) {
+    val controller = LocalVideoPlayerController.current
     val isPlaying by controller.collect { isPlaying }
     val playbackState by controller.collect { playbackState }
 

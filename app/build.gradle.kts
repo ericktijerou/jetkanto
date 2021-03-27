@@ -5,6 +5,7 @@ plugins {
     id(Plugins.apollo)
     kotlin(Plugins.kotlinKapt)
     id(Plugins.spotless)
+    id(Plugins.kotlinParcelize)
 }
 
 android {

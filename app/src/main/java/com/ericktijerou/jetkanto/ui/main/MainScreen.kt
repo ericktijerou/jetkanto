@@ -87,8 +87,10 @@ fun HomeBottomNavigation(
                 icon = { Icon(imageVector = section.icon, contentDescription = section.route) },
                 selected = currentRoute == section.route,
                 onClick = {
-                    navController.navigate(route = section.route) {
-                        popUpTo(currentRoute.orEmpty()) { inclusive = true }
+                    if (currentRoute != section.route) {
+                        navController.navigate(route = section.route) {
+                            popUpTo(currentRoute.orEmpty()) { inclusive = true }
+                        }
                     }
                 },
                 selectedContentColor = Teal500,

@@ -24,6 +24,8 @@ interface VideoPlayerController {
 
     fun pause()
 
+    fun release()
+
     fun playPauseToggle()
 
     fun reset()

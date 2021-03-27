@@ -46,14 +46,12 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,9 +60,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.core.headerExpandedHeight
-import com.ericktijerou.jetkanto.ui.component.player.DefaultVideoPlayerController
-import com.ericktijerou.jetkanto.ui.component.player.KantoPlayer
-import com.ericktijerou.jetkanto.ui.component.player.VideoPlayerState
+import com.ericktijerou.jetkanto.ui.component.player.VideoPlayer
+import com.ericktijerou.jetkanto.ui.component.player.rememberVideoPlayerController
 import com.ericktijerou.jetkanto.ui.entity.RecordView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
@@ -72,7 +69,12 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RecordList(modifier: Modifier = Modifier, list: List<RecordView>, scrollState: LazyListState, autoPlay: Boolean) {
+fun RecordList(
+    modifier: Modifier = Modifier,
+    list: List<RecordView>,
+    scrollState: LazyListState,
+    autoPlay: Boolean
+) {
     LazyColumn(state = scrollState, modifier = modifier) {
         stickyHeader {
             Box(Modifier.padding(top = headerExpandedHeight))
@@ -106,7 +108,7 @@ fun RecordCard(record: RecordView, focused: Boolean) {
                 record = record,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
-            PlayerWithControls(
+            KantoPlayer(
                 record = record,
                 focused = focused,
                 modifier = Modifier
@@ -124,21 +126,17 @@ fun RecordCard(record: RecordView, focused: Boolean) {
 }
 
 @Composable
-fun PlayerWithControls(record: RecordView, modifier: Modifier = Modifier, focused: Boolean) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    val videoPlayerController = DefaultVideoPlayerController(
-        context = context,
-        initialState = VideoPlayerState(),
-        coroutineScope = coroutineScope
-    ).apply {
-        setVideoUrl(record.videoUrl)
-    }
+fun KantoPlayer(record: RecordView, modifier: Modifier = Modifier, focused: Boolean) {
+    val videoPlayerController = rememberVideoPlayerController()
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(videoPlayerController, lifecycleOwner) {
         val observer = object : DefaultLifecycleObserver {
             override fun onPause(owner: LifecycleOwner) {
                 videoPlayerController.pause()
+            }
+
+            override fun onResume(owner: LifecycleOwner) {
+                videoPlayerController.play()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -148,16 +146,18 @@ fun PlayerWithControls(record: RecordView, modifier: Modifier = Modifier, focuse
         }
     }
     Box(modifier = modifier) {
-        if (focused) {
-            KantoPlayer(
-                videoPlayerController = videoPlayerController,
-                backgroundColor = Color.Transparent,
-                modifier = Modifier.fillMaxWidth(),
-                controlsEnabled = false
-            )
-        } else {
+        VideoPlayer(
+            videoPlayerController = videoPlayerController,
+            backgroundColor = KantoTheme.customColors.videoCardColor,
+            modifier = Modifier.fillMaxWidth(),
+            controlsEnabled = false
+        )
+        if (!focused) {
             videoPlayerController.pause()
             VideoPreview(modifier = Modifier.fillMaxSize(), previewUrl = record.preview)
+        } else {
+            videoPlayerController.setVideoUrl(record.videoUrl)
+            videoPlayerController.play()
         }
         Icon(
             imageVector = Icons.Outlined.Videocam,

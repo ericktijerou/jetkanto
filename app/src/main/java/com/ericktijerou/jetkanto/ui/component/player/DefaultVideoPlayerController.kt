@@ -141,6 +141,7 @@ class DefaultVideoPlayerController(
             addListener(playerEventListener)
             addVideoListener(videoListener)
             videoScalingMode = MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT
+            repeatMode = Player.REPEAT_MODE_ONE
         }
 
     init {
@@ -158,6 +159,11 @@ class DefaultVideoPlayerController(
 
     override fun pause() {
         exoPlayer.playWhenReady = false
+    }
+
+    override fun release() {
+        exoPlayer.release()
+        exoPlayer.stop()
     }
 
     override fun playPauseToggle() {

@@ -15,6 +15,7 @@
  */
 package com.ericktijerou.jetkanto.ui.component
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.size
@@ -30,19 +31,24 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.ericktijerou.jetkanto.ui.component.player.DefaultVideoPlayerController
+import com.ericktijerou.jetkanto.ui.component.player.LocalVideoPlayerController
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 
 @Composable
 fun KantoProgressIndicator(
-    modifier: Modifier = Modifier,
-    controller: DefaultVideoPlayerController
+    modifier: Modifier = Modifier
 ) {
+    val controller = LocalVideoPlayerController.current
     val videoPlayerUiState by controller.collect()
     with(videoPlayerUiState) {
+        if (currentPosition >= duration) return@with
         val progress = currentPosition.coerceAtMost(duration).toFloat() / duration.toFloat()
+        val animatedProgress by animateFloatAsState(
+            targetValue = progress,
+            animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
+        )
         ProgressIndicator(
-            progress = progress,
+            progress = animatedProgress,
             modifier = modifier,
             strokeWidth = 2.dp,
             color = KantoTheme.customColors.textPrimaryColor
