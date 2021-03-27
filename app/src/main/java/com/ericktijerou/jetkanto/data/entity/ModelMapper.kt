@@ -25,7 +25,8 @@ fun RecordModel.toLocal() = RecordEntity(
     songName = songName,
     videoUrl = videoUrl,
     preview = preview,
-    likeCount = likeCount
+    likeCount = likeCount,
+    isFavorite = isFavorite
 )
 
 fun UserModel.toLocal() = UserEntity(
@@ -35,11 +36,13 @@ fun UserModel.toLocal() = UserEntity(
 )
 
 fun RecordModel.toDomain() = Record(
+    id = id,
     user = user.toDomain(),
     songName = songName,
     videoUrl = videoUrl,
     preview = preview,
-    likeCount = likeCount
+    likeCount = likeCount,
+    isFavorite = isFavorite
 )
 
 fun UserModel.toDomain() = User(id, name, username, avatar, bio, followers, followed, views)

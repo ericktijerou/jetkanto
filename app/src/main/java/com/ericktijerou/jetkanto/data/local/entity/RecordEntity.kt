@@ -26,5 +26,6 @@ data class RecordEntity(
     val songName: String,
     val videoUrl: String,
     val preview: String,
-    val likeCount: Int
+    val likeCount: Int,
+    val isFavorite: Boolean
 )

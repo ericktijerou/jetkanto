@@ -40,4 +40,10 @@ class RecordDataStore @Inject constructor(
     suspend fun clearAll() {
         return recordDao.clearAll()
     }
+
+    suspend fun setFavoriteRecord(idRecord: Long, isFavorite: Boolean) {
+        val currentLikeCount = recordDao.getRecordById(idRecord).likeCount
+        val newLikeCount = if (!isFavorite) currentLikeCount + 1 else currentLikeCount - 1
+        recordDao.updateFavoriteById(idRecord, !isFavorite, newLikeCount)
+    }
 }

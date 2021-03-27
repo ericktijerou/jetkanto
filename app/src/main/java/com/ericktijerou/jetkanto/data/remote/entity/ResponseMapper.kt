@@ -24,7 +24,8 @@ fun RecordResponse.toData() = RecordModel(
     songName = songName.orEmpty(),
     videoUrl = videoUrl.orEmpty(),
     preview = preview.orEmpty(),
-    likeCount = likeCount.orZero()
+    likeCount = likeCount.orZero(),
+    isFavorite = false
 )
 
 fun UserResponse.toData() = UserModel(

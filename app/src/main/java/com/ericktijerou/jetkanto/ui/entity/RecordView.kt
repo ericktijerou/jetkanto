@@ -16,11 +16,13 @@
 package com.ericktijerou.jetkanto.ui.entity
 
 data class RecordView(
+    val id: Long,
     val songName: String,
     val videoUrl: String,
     val preview: String,
     val likeCount: Int,
     val ownerName: String,
     val ownerUsername: String,
-    val ownerAvatar: String
+    val ownerAvatar: String,
+    val isFavorite: Boolean
 )

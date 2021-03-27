@@ -73,7 +73,8 @@ fun RecordList(
     modifier: Modifier = Modifier,
     list: List<RecordView>,
     scrollState: LazyListState,
-    autoPlay: Boolean
+    autoPlay: Boolean,
+    onFavoriteClick: (Long, Boolean) -> Unit
 ) {
     LazyColumn(state = scrollState, modifier = modifier) {
         stickyHeader {
@@ -83,7 +84,7 @@ fun RecordList(
             items = list,
             itemContent = { index, record ->
                 val focused = autoPlay && index == scrollState.firstVisibleItemIndex
-                RecordCard(record = record, focused)
+                RecordCard(record = record, focused = focused, onFavoriteClick = onFavoriteClick)
             }
         )
         item {
@@ -93,7 +94,11 @@ fun RecordList(
 }
 
 @Composable
-fun RecordCard(record: RecordView, focused: Boolean) {
+fun RecordCard(
+    record: RecordView,
+    focused: Boolean,
+    onFavoriteClick: (Long, Boolean) -> Unit
+) {
     Card(
         shape = RoundedCornerShape(16.dp),
         backgroundColor = KantoTheme.customColors.videoCardColor,
@@ -116,10 +121,9 @@ fun RecordCard(record: RecordView, focused: Boolean) {
                     .fillMaxWidth()
             )
             RecordFooter(
-                likes = record.likeCount.toString(),
+                record = record,
                 modifier = Modifier.padding(start = 8.dp),
-                onLikeClick = {},
-                liked = true
+                onFavoriteClick = onFavoriteClick
             )
         }
     }
@@ -251,10 +255,14 @@ fun RecordHeader(record: RecordView, modifier: Modifier) {
 }
 
 @Composable
-fun RecordFooter(likes: String, modifier: Modifier, onLikeClick: () -> Unit, liked: Boolean) {
-    IconButton(onClick = onLikeClick, modifier = modifier) {
-        val color = if (liked) Teal500 else KantoTheme.customColors.textPrimaryColor
-        val icon = if (liked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
+fun RecordFooter(
+    record: RecordView,
+    modifier: Modifier,
+    onFavoriteClick: (Long, Boolean) -> Unit
+) {
+    IconButton(onClick = { onFavoriteClick(record.id, record.isFavorite) }, modifier = modifier) {
+        val color = if (record.isFavorite) Teal500 else KantoTheme.customColors.textPrimaryColor
+        val icon = if (record.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = icon,
@@ -263,7 +271,7 @@ fun RecordFooter(likes: String, modifier: Modifier, onLikeClick: () -> Unit, lik
                 tint = color
             )
             Text(
-                text = likes,
+                text = record.likeCount.toString(),
                 color = color,
                 style = KantoTheme.typography.body1,
                 modifier = Modifier.padding(start = 4.dp)

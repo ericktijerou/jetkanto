@@ -72,7 +72,10 @@ fun ProfileScreen(modifier: Modifier) {
                     list = it,
                     modifier = Modifier.fillMaxWidth(),
                     scrollState = scrollState,
-                    autoPlay = scrollProgress < 0.6f
+                    autoPlay = scrollProgress < 0.6f,
+                    onFavoriteClick = { recordId, isFavorite ->
+                        viewModel.setFavoriteRecord(recordId, isFavorite)
+                    }
                 )
             }
         },

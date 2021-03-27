@@ -30,9 +30,11 @@ fun UserEntity.toData() = UserModel(
 )
 
 fun RecordEntity.toData() = RecordModel(
+    id = id,
     user = user.toData(),
     songName = songName,
     videoUrl = videoUrl,
     preview = preview,
-    likeCount = likeCount
+    likeCount = likeCount,
+    isFavorite = isFavorite
 )

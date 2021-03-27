@@ -32,4 +32,10 @@ interface RecordDao {
 
     @Query("DELETE FROM Record")
     suspend fun clearAll()
+
+    @Query("SELECT * FROM Record WHERE id = :id ")
+    suspend fun getRecordById(id: Long): RecordEntity
+
+    @Query("UPDATE Record SET isFavorite = :value, likeCount = :likeCount WHERE id LIKE :recordId")
+    suspend fun updateFavoriteById(recordId: Long, value: Boolean, likeCount: Int)
 }

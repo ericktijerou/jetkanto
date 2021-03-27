@@ -16,7 +16,6 @@
 package com.ericktijerou.jetkanto.ui.component.player
 
 import android.content.Context
-import android.media.MediaCodec
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -27,6 +26,7 @@ import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.core.set
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.Renderer.VIDEO_SCALING_MODE_SCALE_TO_FIT
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -140,7 +140,7 @@ class DefaultVideoPlayerController(
             playWhenReady = initialState.isPlaying
             addListener(playerEventListener)
             addVideoListener(videoListener)
-            videoScalingMode = MediaCodec.VIDEO_SCALING_MODE_SCALE_TO_FIT
+            videoScalingMode = VIDEO_SCALING_MODE_SCALE_TO_FIT
             repeatMode = Player.REPEAT_MODE_ONE
         }
 

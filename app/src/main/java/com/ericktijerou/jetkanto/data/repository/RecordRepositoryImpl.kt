@@ -31,4 +31,8 @@ class RecordRepositoryImpl @Inject constructor(
             list.map { it.toDomain() }
         }
     }
+
+    override suspend fun setFavoriteRecord(idRecord: Long, isFavorite: Boolean) {
+        return recordDataStore.setFavoriteRecord(idRecord, isFavorite)
+    }
 }

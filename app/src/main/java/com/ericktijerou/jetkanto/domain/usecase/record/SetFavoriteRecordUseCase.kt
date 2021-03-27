@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto.data.entity
+package com.ericktijerou.jetkanto.domain.usecase.record
 
-data class RecordModel(
-    val id: Long = 0,
-    val user: UserModel,
-    val songName: String,
-    val videoUrl: String,
-    val preview: String,
-    val likeCount: Int,
-    val isFavorite: Boolean
-)
+import com.ericktijerou.jetkanto.domain.repository.RecordRepository
+import javax.inject.Inject
+
+class SetFavoriteRecordUseCase @Inject constructor(private val repository: RecordRepository) {
+    suspend operator fun invoke(idRecord: Long, isFavorite: Boolean) {
+        repository.setFavoriteRecord(idRecord, isFavorite)
+    }
+}

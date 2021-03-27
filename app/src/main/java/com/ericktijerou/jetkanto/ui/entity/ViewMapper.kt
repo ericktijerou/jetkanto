@@ -27,11 +27,13 @@ fun UserView?.orEmpty(): UserView {
 }
 
 fun Record.toView() = RecordView(
+    id = id,
     ownerName = user.name,
     ownerUsername = user.username,
     ownerAvatar = user.avatar,
     songName = songName,
     videoUrl = videoUrl,
     preview = preview,
-    likeCount = likeCount
+    likeCount = likeCount,
+    isFavorite = isFavorite
 )

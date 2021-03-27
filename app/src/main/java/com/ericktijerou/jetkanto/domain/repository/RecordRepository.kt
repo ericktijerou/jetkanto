@@ -20,4 +20,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface RecordRepository {
     fun getRecordList(): Flow<List<Record>>
+    suspend fun setFavoriteRecord(idRecord: Long, isFavorite: Boolean)
 }

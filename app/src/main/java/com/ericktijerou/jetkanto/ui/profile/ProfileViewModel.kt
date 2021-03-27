@@ -18,6 +18,7 @@ package com.ericktijerou.jetkanto.ui.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ericktijerou.jetkanto.domain.usecase.record.GetRecordUseCase
+import com.ericktijerou.jetkanto.domain.usecase.record.SetFavoriteRecordUseCase
 import com.ericktijerou.jetkanto.domain.usecase.session.GetSessionUseCase
 import com.ericktijerou.jetkanto.ui.entity.RecordView
 import com.ericktijerou.jetkanto.ui.entity.UserView
@@ -29,13 +30,21 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val getSessionUseCase: GetSessionUseCase,
-    private val getRecordUseCase: GetRecordUseCase
+    getSessionUseCase: GetSessionUseCase,
+    getRecordUseCase: GetRecordUseCase,
+    private val setFavoriteRecordUseCase: SetFavoriteRecordUseCase
 ) : ViewModel() {
+
+    fun setFavoriteRecord(recordId: Long, isFavorite: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            setFavoriteRecordUseCase.invoke(recordId, isFavorite)
+        }
+    }
 
     val session: SharedFlow<UserView> = getSessionUseCase.invoke()
         .distinctUntilChanged()
