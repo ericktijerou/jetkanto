@@ -33,9 +33,11 @@ fun KantoApp() {
             val navController = rememberNavController()
             NavHost(navController, startDestination = Screens.Main.route) {
                 composable(Screens.Main.route) {
-                    MainScreen(goToEditProfile = {
-                        navController.navigate(route = Screens.EditProfile.route)
-                    })
+                    MainScreen(
+                        goToEditProfile = {
+                            navController.navigate(route = Screens.EditProfile.route)
+                        }
+                    )
                 }
                 composable(Screens.EditProfile.route) {
                     EditProfileScreen(onBackPressed = { navController.navigateUp() })

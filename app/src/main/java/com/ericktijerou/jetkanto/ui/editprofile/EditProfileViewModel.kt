@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.ericktijerou.jetkanto.ui.editprofile
 
 import androidx.lifecycle.ViewModel
@@ -31,7 +46,7 @@ class EditProfileViewModel @Inject constructor(
     val updateSessionState = _updateSessionState.shareWhileObserved(viewModelScope)
 
     val session: SharedFlow<UserView> = getSessionUseCase.invoke()
-        .map { it.toView() }
+        .map { it.toView().apply { username = username.takeLast(username.length - 1) } }
         .flowOn(Dispatchers.IO)
         .shareWhileObserved(viewModelScope)
 
@@ -39,7 +54,7 @@ class EditProfileViewModel @Inject constructor(
         job?.cancel()
         job = viewModelScope.launch(Dispatchers.IO) {
             _updateSessionState.emit(ViewState.Loading)
-            updateSessionUseCase.invoke(userView.toDomain())
+            updateSessionUseCase.invoke(userView.apply { username = "@$username" }.toDomain())
             _updateSessionState.emit(ViewState.Success)
         }
     }

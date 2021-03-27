@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.ericktijerou.jetkanto.ui.editprofile
 
 import androidx.compose.foundation.background
@@ -38,6 +53,7 @@ import com.ericktijerou.jetkanto.ui.component.Loader
 import com.ericktijerou.jetkanto.ui.component.TextField
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
+import com.ericktijerou.jetkanto.ui.util.TextValidator
 import com.ericktijerou.jetkanto.ui.util.ViewState
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 import dev.chrisbanes.accompanist.coil.CoilImage
@@ -53,6 +69,9 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
         var name by remember { mutableStateOf(TextFieldValue(session.name)) }
         var username by remember { mutableStateOf(TextFieldValue(session.username)) }
         var bio by remember { mutableStateOf(TextFieldValue(session.bio)) }
+        val isValidName = TextValidator.isValidName(name.text)
+        val isValidUserName = TextValidator.isValidUsername(username.text)
+        val isValidBio = TextValidator.isValidBio(bio.text)
         Scaffold(
             topBar = {
                 EditProfileTopBar(
@@ -65,7 +84,8 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
                             this.bio = bio.text
                         }
                         viewModel.updateSession(newSession)
-                    }
+                    },
+                    saveEnabled = isValidName && isValidUserName && isValidBio
                 )
             }
         ) { innerPadding ->
@@ -89,7 +109,7 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
                         .padding(top = 8.dp, bottom = 16.dp)
                         .height(24.dp)
                         .clickable { }
-                        .background(color = KantoTheme.colors.primary, shape = CircleShape)
+                        .background(color = KantoTheme.customColors.cardColor, shape = CircleShape)
                 ) {
                     Text(
                         text = stringResource(R.string.label_change_photo),
@@ -108,7 +128,8 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(64.dp)
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = 4.dp),
+                    isErrorValue = !isValidName
                 )
                 TextField(
                     textFieldValue = username,
@@ -117,7 +138,8 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(64.dp)
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = 4.dp),
+                    isErrorValue = !isValidUserName
                 )
                 TextField(
                     textFieldValue = bio,
@@ -126,7 +148,8 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(64.dp)
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = 4.dp),
+                    isErrorValue = !isValidBio
                 )
             }
         }
@@ -134,7 +157,6 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
             is ViewState.Loading -> Loader()
             is ViewState.Success -> onBackPressed()
         }
-
     }
 }
 
@@ -143,7 +165,8 @@ fun EditProfileTopBar(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.primary,
     onBackPressed: () -> Unit,
-    onSave: () -> Unit
+    onSave: () -> Unit,
+    saveEnabled: Boolean
 ) {
     TopAppBar(
         title = {
@@ -166,12 +189,14 @@ fun EditProfileTopBar(
             }
         },
         actions = {
-            IconButton(onClick = onSave) {
-                Icon(
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = stringResource(R.string.label_cancel),
-                    tint = Teal500
-                )
+            if (saveEnabled) {
+                IconButton(onClick = onSave) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = stringResource(R.string.label_cancel),
+                        tint = Teal500
+                    )
+                }
             }
         },
         backgroundColor = backgroundColor,

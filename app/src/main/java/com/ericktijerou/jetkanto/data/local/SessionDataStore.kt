@@ -17,7 +17,6 @@ package com.ericktijerou.jetkanto.data.local
 
 import com.ericktijerou.jetkanto.data.entity.UserModel
 import com.ericktijerou.jetkanto.data.local.system.SessionHelper
-import com.ericktijerou.jetkanto.domain.entity.User
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

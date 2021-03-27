@@ -101,7 +101,7 @@ fun RecordCard(
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        backgroundColor = KantoTheme.customColors.videoCardColor,
+        backgroundColor = KantoTheme.customColors.cardColor,
         modifier = Modifier
             .padding(start = 12.dp, end = 12.dp, top = 16.dp)
             .fillMaxWidth()
@@ -152,7 +152,7 @@ fun KantoPlayer(record: RecordView, modifier: Modifier = Modifier, focused: Bool
     Box(modifier = modifier) {
         VideoPlayer(
             videoPlayerController = videoPlayerController,
-            backgroundColor = KantoTheme.customColors.videoCardColor,
+            backgroundColor = KantoTheme.customColors.cardColor,
             modifier = Modifier.fillMaxWidth(),
             controlsEnabled = false
         )

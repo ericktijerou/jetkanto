@@ -96,7 +96,7 @@ fun VideoPlayer(
         videoPlayerController.enableControls(controlsEnabled)
     }
     CompositionLocalProvider(
-        LocalContentColor provides KantoTheme.customColors.videoCardColor,
+        LocalContentColor provides KantoTheme.customColors.cardColor,
         LocalVideoPlayerController provides videoPlayerController
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {

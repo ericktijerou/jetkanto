@@ -74,7 +74,7 @@ fun TopBarContent(modifier: Modifier = Modifier, session: UserView, goToEditProf
             textAlign = TextAlign.Center
         )
         Text(
-            text = "@${session.username}",
+            text = session.username,
             style = KantoTheme.typography.body2,
             color = Color.White.copy(alpha = 0.6f),
             textAlign = TextAlign.Center

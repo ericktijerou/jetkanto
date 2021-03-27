@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto.ui.component
+package com.ericktijerou.jetkanto.ui.util
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import com.ericktijerou.jetkanto.ui.theme.Teal500
+import androidx.core.text.trimmedLength
 
-@Composable
-fun Loader() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator(color = Teal500)
-    }
+object TextValidator {
+    fun isValidUsername(username: String): Boolean = username.trimmedLength() in (4..30)
+    fun isValidName(username: String): Boolean = username.trimmedLength() in (4..30)
+    fun isValidBio(username: String): Boolean = username.trimmedLength() in (0..60)
 }
