@@ -15,6 +15,13 @@
  */
 package com.ericktijerou.jetkanto.ui.editprofile
 
+import android.app.Activity
+import android.content.Intent
+import android.provider.MediaStore
+import androidx.activity.compose.registerForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -24,11 +31,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -48,6 +57,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.ui.component.Loader
 import com.ericktijerou.jetkanto.ui.component.TextField
@@ -63,6 +73,7 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
     val viewModel: EditProfileViewModel by hiltViewModel()
     val session = viewModel.session.collectAsState(initial = null).value
     val updateState = viewModel.updateSessionState.collectAsState(initial = null)
+    val showChooseImageDialog = remember { mutableStateOf(false) }
     if (session == null) {
         Loader()
     } else {
@@ -108,7 +119,9 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
                     modifier = Modifier
                         .padding(top = 8.dp, bottom = 16.dp)
                         .height(24.dp)
-                        .clickable { }
+                        .clickable {
+                            showChooseImageDialog.value = true
+                        }
                         .background(color = KantoTheme.customColors.cardColor, shape = CircleShape)
                 ) {
                     Text(
@@ -153,6 +166,18 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
                 )
             }
         }
+        val startForResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result: ActivityResult ->
+                if (result.resultCode == Activity.RESULT_OK) {
+
+                }
+            }
+        ChooseImageDialog(
+            onDismissRequest = { showChooseImageDialog.value = false },
+            visible = showChooseImageDialog.value,
+            activityResultLauncher = startForResult
+        )
         when (updateState.value) {
             is ViewState.Loading -> Loader()
             is ViewState.Success -> onBackPressed()
@@ -203,4 +228,64 @@ fun EditProfileTopBar(
         modifier = modifier,
         elevation = 0.dp
     )
+}
+
+@Composable
+fun ChooseImageDialog(
+    onDismissRequest: () -> Unit,
+    visible: Boolean,
+    activityResultLauncher: ActivityResultLauncher<Intent>
+) {
+    if (visible) {
+        Dialog(onDismissRequest = onDismissRequest) {
+            Column(
+                modifier = Modifier
+                    .background(
+                        color = KantoTheme.colors.primary,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.label_select_image),
+                    style = KantoTheme.typography.subtitle2.copy(fontWeight = FontWeight.Bold),
+                    color = KantoTheme.customColors.textPrimaryColor,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                TextButton(
+                    onClick = {
+                        activityResultLauncher.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
+                        onDismissRequest()
+                    }, modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.label_take_photo),
+                        style = KantoTheme.typography.body1,
+                        color = KantoTheme.customColors.textPrimaryColor
+                    )
+                }
+                TextButton(
+                    onClick = {
+                        activityResultLauncher.launch(
+                            Intent(
+                                Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                            )
+                        )
+                        onDismissRequest()
+                    }, modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.label_choose_from_library),
+                        style = KantoTheme.typography.body1,
+                        color = KantoTheme.customColors.textPrimaryColor
+                    )
+                }
+            }
+        }
+    }
 }
