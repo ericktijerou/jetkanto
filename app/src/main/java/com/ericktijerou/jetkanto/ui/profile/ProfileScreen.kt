@@ -20,12 +20,14 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.dp
 import com.ericktijerou.jetkanto.core.headerCollapsedHeight
 import com.ericktijerou.jetkanto.core.headerExpandedHeight
 import com.ericktijerou.jetkanto.ui.component.CollapsingScrollTopBar
@@ -59,6 +61,7 @@ fun ProfileScreen(modifier: Modifier, goToEditProfile: () -> Unit) {
                     goToEditProfile = goToEditProfile,
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(horizontal = 16.dp)
                         .graphicsLayer {
                             translationY = -scrollY
                             alpha = alphaAnimate

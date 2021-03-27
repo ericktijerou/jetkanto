@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ericktijerou.jetkanto.R
@@ -69,18 +70,21 @@ fun TopBarContent(modifier: Modifier = Modifier, session: UserView, goToEditProf
             text = session.name,
             style = KantoTheme.typography.h6.copy(fontWeight = FontWeight.Black),
             color = Color.White,
-            modifier = Modifier.padding(top = 12.dp)
+            modifier = Modifier.padding(top = 12.dp),
+            textAlign = TextAlign.Center
         )
         Text(
             text = "@${session.username}",
             style = KantoTheme.typography.body2,
-            color = Color.White.copy(alpha = 0.6f)
+            color = Color.White.copy(alpha = 0.6f),
+            textAlign = TextAlign.Center
         )
         Text(
             text = session.bio,
             style = KantoTheme.typography.body2,
             color = Color.White.copy(alpha = 0.6f),
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = 8.dp),
+            textAlign = TextAlign.Center
         )
         Box(
             contentAlignment = Alignment.Center,
