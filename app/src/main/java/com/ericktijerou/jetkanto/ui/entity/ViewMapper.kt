@@ -37,3 +37,14 @@ fun Record.toView() = RecordView(
     likeCount = likeCount,
     isFavorite = isFavorite
 )
+
+fun UserView.toDomain() = User(
+    id = id,
+    name = name,
+    username = username,
+    avatar = avatar,
+    bio = bio,
+    followers = followers,
+    followed = followed,
+    views = views
+)

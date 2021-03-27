@@ -20,4 +20,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface SessionRepository {
     fun getSession(): Flow<User>
+    suspend fun updateSession(user: User)
 }

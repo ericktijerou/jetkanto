@@ -28,7 +28,7 @@ fun TextField(
     onTextChanged: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    textStyle: TextStyle = MaterialTheme.typography.body1.copy(color = Color.Black),
+    textStyle: TextStyle = MaterialTheme.typography.body1.copy(color = KantoTheme.customColors.textPrimaryColor),
     keyboardType: KeyboardType = KeyboardType.Text
 ) {
     val focusManager = LocalFocusManager.current
@@ -56,8 +56,10 @@ fun TextField(
         colors = outlinedTextFieldColors(
             focusedBorderColor = Teal500,
             unfocusedBorderColor = KantoTheme.customColors.textSecondaryColor,
-            focusedLabelColor = Teal500,
-            unfocusedLabelColor = KantoTheme.customColors.textSecondaryColor
+            focusedLabelColor = KantoTheme.customColors.textPrimaryColor,
+            unfocusedLabelColor = KantoTheme.customColors.textSecondaryColor,
+            cursorColor = Teal500,
+            textColor = KantoTheme.customColors.textPrimaryColor,
         )
     )
 }

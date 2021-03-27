@@ -46,3 +46,7 @@ fun RecordModel.toDomain() = Record(
 )
 
 fun UserModel.toDomain() = User(id, name, username, avatar, bio, followers, followed, views)
+
+fun User.toLocal() = UserModel(
+    id, name, username, avatar, bio, followers, followed, views
+)

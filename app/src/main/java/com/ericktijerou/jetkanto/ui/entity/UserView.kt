@@ -17,10 +17,10 @@ package com.ericktijerou.jetkanto.ui.entity
 
 data class UserView(
     val id: String,
-    val name: String,
-    val username: String,
-    val avatar: String,
-    val bio: String,
+    var name: String,
+    var username: String,
+    var avatar: String,
+    var bio: String,
     val followers: Int,
     val followed: Int,
     val views: Int

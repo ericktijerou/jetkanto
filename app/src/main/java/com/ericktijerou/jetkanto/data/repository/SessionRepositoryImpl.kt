@@ -16,6 +16,7 @@
 package com.ericktijerou.jetkanto.data.repository
 
 import com.ericktijerou.jetkanto.data.entity.toDomain
+import com.ericktijerou.jetkanto.data.entity.toLocal
 import com.ericktijerou.jetkanto.data.local.SessionDataStore
 import com.ericktijerou.jetkanto.domain.entity.User
 import com.ericktijerou.jetkanto.domain.repository.SessionRepository
@@ -28,5 +29,9 @@ class SessionRepositoryImpl @Inject constructor(
 ) : SessionRepository {
     override fun getSession(): Flow<User> {
         return sessionDataStore.getSession().map { it.toDomain() }
+    }
+
+    override suspend fun updateSession(user: User) {
+        return sessionDataStore.saveSession(user.toLocal())
     }
 }
