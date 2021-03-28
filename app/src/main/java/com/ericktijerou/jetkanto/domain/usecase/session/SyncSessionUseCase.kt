@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class SyncSessionUseCase @Inject constructor(private val workManager: WorkManager) {
     operator fun invoke(): UUID {
-        val sessionSyncWorker = PeriodicWorkRequestBuilder<SessionSyncWorker>(1, TimeUnit.DAYS)
+        val sessionSyncWorker = PeriodicWorkRequestBuilder<SessionSyncWorker>(2, TimeUnit.DAYS)
             .setConstraints(getRequiredConstraints())
             .build()
 

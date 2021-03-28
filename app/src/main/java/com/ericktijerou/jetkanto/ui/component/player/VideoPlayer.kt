@@ -99,7 +99,7 @@ fun VideoPlayer(
         LocalContentColor provides KantoTheme.customColors.cardColor,
         LocalVideoPlayerController provides videoPlayerController
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth().background(backgroundColor)) {
             KantoProgressIndicator(modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(0.5.dp))
             Box(

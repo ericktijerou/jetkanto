@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class SyncRecordUseCase @Inject constructor(private val workManager: WorkManager) {
     operator fun invoke(): UUID {
-        val recordSyncWorker = PeriodicWorkRequestBuilder<RecordSyncWorker>(1, TimeUnit.DAYS)
+        val recordSyncWorker = PeriodicWorkRequestBuilder<RecordSyncWorker>(2, TimeUnit.DAYS)
             .setConstraints(getRequiredConstraints())
             .build()
 

@@ -46,6 +46,10 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,6 +70,9 @@ import com.ericktijerou.jetkanto.ui.entity.RecordView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
 import dev.chrisbanes.accompanist.coil.CoilImage
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -76,6 +83,7 @@ fun RecordList(
     autoPlay: Boolean,
     onFavoriteClick: (Long, Boolean) -> Unit
 ) {
+    val playerJob = remember { mutableStateOf<Job?>(null) }
     LazyColumn(state = scrollState, modifier = modifier) {
         stickyHeader {
             Box(Modifier.padding(top = headerExpandedHeight))
@@ -88,7 +96,7 @@ fun RecordList(
                     record = record,
                     focused = focused,
                     onFavoriteClick = onFavoriteClick,
-                    autoPlay = autoPlay
+                    playerJob = playerJob
                 )
             }
         )
@@ -103,7 +111,7 @@ fun RecordCard(
     record: RecordView,
     focused: Boolean,
     onFavoriteClick: (Long, Boolean) -> Unit,
-    autoPlay: Boolean
+    playerJob: MutableState<Job?>
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -122,7 +130,7 @@ fun RecordCard(
             KantoPlayer(
                 record = record,
                 focused = focused,
-                autoPlay = autoPlay,
+                playerJob = playerJob,
                 modifier = Modifier
                     .aspectRatio(1f)
                     .fillMaxWidth()
@@ -141,39 +149,52 @@ fun KantoPlayer(
     record: RecordView,
     modifier: Modifier = Modifier,
     focused: Boolean,
-    autoPlay: Boolean
+    playerJob: MutableState<Job?>
 ) {
     val videoPlayerController = rememberVideoPlayerController()
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(videoPlayerController, lifecycleOwner) {
-        val observer = object : DefaultLifecycleObserver {
-            override fun onPause(owner: LifecycleOwner) {
-                videoPlayerController.pause()
-            }
+    val showPreview = remember { mutableStateOf(true) }
+    if (focused) {
+        val lifecycleOwner = LocalLifecycleOwner.current
+        DisposableEffect(videoPlayerController, lifecycleOwner) {
+            val observer = object : DefaultLifecycleObserver {
+                override fun onPause(owner: LifecycleOwner) {
+                    videoPlayerController.pause()
+                }
 
-            override fun onResume(owner: LifecycleOwner) {
-                if (autoPlay) videoPlayerController.play()
+                override fun onResume(owner: LifecycleOwner) {
+                    videoPlayerController.play()
+                }
             }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
+            lifecycleOwner.lifecycle.addObserver(observer)
 
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
+            onDispose {
+                lifecycleOwner.lifecycle.removeObserver(observer)
+            }
         }
     }
     Box(modifier = modifier) {
-        VideoPlayer(
-            videoPlayerController = videoPlayerController,
-            backgroundColor = KantoTheme.customColors.cardColor,
-            modifier = Modifier.fillMaxWidth(),
-            controlsEnabled = false
-        )
         if (!focused) {
+            showPreview.value = true
             videoPlayerController.pause()
-            VideoPreview(modifier = Modifier.fillMaxSize(), previewUrl = record.preview)
         } else {
-            videoPlayerController.setVideoUrl(record.videoUrl)
-            videoPlayerController.play()
+            VideoPlayer(
+                videoPlayerController = videoPlayerController,
+                backgroundColor = KantoTheme.customColors.cardColor,
+                modifier = Modifier.fillMaxWidth(),
+                controlsEnabled = false
+            )
+            LaunchedEffect(key1 = videoPlayerController) {
+                playerJob.value?.cancel()
+                delay(500)
+                showPreview.value = false
+                playerJob.value = launch {
+                    videoPlayerController.setVideoUrl(record.videoUrl)
+                    videoPlayerController.play()
+                }
+            }
+        }
+        if (showPreview.value) {
+            VideoPreview(modifier = Modifier.fillMaxSize(), previewUrl = record.preview)
         }
         Icon(
             imageVector = Icons.Outlined.Videocam,
