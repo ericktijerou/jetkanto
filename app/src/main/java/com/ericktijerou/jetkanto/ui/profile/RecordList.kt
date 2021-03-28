@@ -59,6 +59,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -69,6 +70,8 @@ import com.ericktijerou.jetkanto.ui.component.player.rememberVideoPlayerControll
 import com.ericktijerou.jetkanto.ui.entity.RecordView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
+import com.ericktijerou.jetkanto.ui.util.MockDataHelper
+import com.ericktijerou.jetkanto.ui.util.ThemedPreview
 import dev.chrisbanes.accompanist.coil.CoilImage
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -310,5 +313,31 @@ fun RecordFooter(
                 modifier = Modifier.padding(start = 4.dp)
             )
         }
+    }
+}
+
+@Preview("Record card")
+@Composable
+fun PreviewRecordCard() {
+    ThemedPreview {
+        RecordCard(
+            record = MockDataHelper.record,
+            false,
+            onFavoriteClick = { _, _ -> },
+            playerJob = mutableStateOf(null)
+        )
+    }
+}
+
+@Preview("Record card dark")
+@Composable
+fun PreviewRecordCardDark() {
+    ThemedPreview(darkTheme = true) {
+        RecordCard(
+            record = MockDataHelper.record,
+            false,
+            onFavoriteClick = { _, _ -> },
+            playerJob = mutableStateOf(null)
+        )
     }
 }

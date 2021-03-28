@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ericktijerou.jetkanto.core.headerCollapsedHeight
 import com.ericktijerou.jetkanto.core.headerExpandedHeight
@@ -35,6 +36,7 @@ import com.ericktijerou.jetkanto.ui.component.CollapsingTopBarHeader
 import com.ericktijerou.jetkanto.ui.component.Loader
 import com.ericktijerou.jetkanto.ui.entity.orEmpty
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
+import com.ericktijerou.jetkanto.ui.util.ThemedPreview
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 
 @Composable
@@ -88,4 +90,18 @@ fun ProfileScreen(modifier: Modifier, goToEditProfile: () -> Unit, toggleTheme: 
         },
         modifier = modifier.fillMaxSize()
     )
+}
+
+@Preview("Collapsing topBar Header")
+@Composable
+fun PreviewCollapsingTopBarHeader() {
+    ThemedPreview {
+        CollapsingTopBarHeader(
+            title = "Erick Tijero",
+            scrollProgress = 1f,
+            expandedHeight = headerExpandedHeight,
+            collapsedHeight = headerCollapsedHeight,
+            toggleTheme = {}
+        ) {}
+    }
 }

@@ -38,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ericktijerou.jetkanto.R
@@ -47,6 +48,8 @@ import com.ericktijerou.jetkanto.ui.entity.UserView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.PurpleDark
 import com.ericktijerou.jetkanto.ui.theme.PurpleOpaque
+import com.ericktijerou.jetkanto.ui.util.MockDataHelper
+import com.ericktijerou.jetkanto.ui.util.ThemedPreview
 import dev.chrisbanes.accompanist.coil.CoilImage
 import java.io.File
 
@@ -180,3 +183,19 @@ data class Indicator(
     val value: Int,
     val label: String
 )
+
+@Preview("Profile header")
+@Composable
+fun PreviewProfileHeader() {
+    ThemedPreview {
+        TopBarContent(session = MockDataHelper.session, goToEditProfile = {})
+    }
+}
+
+@Preview("Profile header dark")
+@Composable
+fun PreviewProfileHeaderDark() {
+    ThemedPreview(darkTheme = true) {
+        TopBarContent(session = MockDataHelper.session, goToEditProfile = {})
+    }
+}

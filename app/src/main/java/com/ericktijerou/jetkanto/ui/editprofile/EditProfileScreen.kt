@@ -68,6 +68,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -81,7 +82,9 @@ import com.ericktijerou.jetkanto.ui.entity.UserView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
 import com.ericktijerou.jetkanto.ui.util.BackHandler
+import com.ericktijerou.jetkanto.ui.util.MockDataHelper
 import com.ericktijerou.jetkanto.ui.util.TextValidator
+import com.ericktijerou.jetkanto.ui.util.ThemedPreview
 import com.ericktijerou.jetkanto.ui.util.ViewState
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 import dev.chrisbanes.accompanist.coil.CoilImage
@@ -407,4 +410,32 @@ fun ChooseImageDialog(
 sealed class RequestCode {
     object Camera : RequestCode()
     object Gallery : RequestCode()
+}
+
+@Preview("Edit profile body")
+@Composable
+fun PreviewEditProfileBody() {
+    ThemedPreview {
+        EditProfileBody(
+            session = MockDataHelper.session,
+            onBackPressed = {},
+            localImagePath = "",
+            onSave = {},
+            onChangePhoto = {}
+        )
+    }
+}
+
+@Preview("Edit profile dark")
+@Composable
+fun PreviewEditProfileBodyDark() {
+    ThemedPreview(darkTheme = true) {
+        EditProfileBody(
+            session = MockDataHelper.session,
+            onBackPressed = {},
+            localImagePath = "",
+            onSave = {},
+            onChangePhoto = {}
+        )
+    }
 }
