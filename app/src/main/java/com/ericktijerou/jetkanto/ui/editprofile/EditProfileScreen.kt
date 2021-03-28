@@ -24,7 +24,13 @@ import android.widget.Toast
 import androidx.activity.compose.registerForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,6 +52,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +64,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -72,45 +80,72 @@ import com.ericktijerou.jetkanto.ui.component.TextField
 import com.ericktijerou.jetkanto.ui.entity.UserView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
+import com.ericktijerou.jetkanto.ui.util.BackHandler
 import com.ericktijerou.jetkanto.ui.util.TextValidator
 import com.ericktijerou.jetkanto.ui.util.ViewState
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 import dev.chrisbanes.accompanist.coil.CoilImage
+import kotlinx.coroutines.delay
 import java.io.File
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun EditProfileScreen(onBackPressed: () -> Unit) {
-    val viewModel: EditProfileViewModel by hiltViewModel()
-    val session = viewModel.session.collectAsState(initial = null).value
-    val updateState = viewModel.updateSessionState.collectAsState(initial = null)
-    val showChooseImageDialog = remember { mutableStateOf(false) }
-    if (session == null) {
-        Loader()
-    } else {
-        val localImagePath = remember { mutableStateOf(session.localAvatarPath) }
-        EditProfileBody(
-            session = session,
-            onBackPressed = onBackPressed,
-            localImagePath = localImagePath.value,
-            onSave = { newSession ->
-                viewModel.updateSession(newSession)
-            },
-            onChangePhoto = {
-                showChooseImageDialog.value = true
+    val (isFinish, setFinish) = remember { mutableStateOf(false) }
+    BoxWithConstraints(modifier = Modifier.background(KantoTheme.colors.background)) {
+        val offsetY = with(LocalDensity.current) { maxHeight.toPx().toInt() }
+        AnimatedVisibility(
+            visible = !isFinish,
+            exit = slideOutVertically(targetOffsetY = { offsetY }),
+            enter = slideInVertically(initialOffsetY = { offsetY }),
+            initiallyVisible = false
+        ) {
+            Box {
+                val viewModel: EditProfileViewModel by hiltViewModel()
+                val session = viewModel.session.collectAsState(initial = null).value
+                val updateState = viewModel.updateSessionState.collectAsState(initial = null)
+                val showChooseImageDialog = remember { mutableStateOf(false) }
+                if (session == null) {
+                    Loader()
+                } else {
+                    val localImagePath = remember { mutableStateOf(session.localAvatarPath) }
+                    EditProfileBody(
+                        session = session,
+                        onBackPressed = { setFinish(true) },
+                        localImagePath = localImagePath.value,
+                        onSave = { newSession ->
+                            viewModel.updateSession(newSession)
+                        },
+                        onChangePhoto = {
+                            showChooseImageDialog.value = true
+                        }
+                    )
+                    ChooseImageDialog(
+                        onDismissRequest = { showChooseImageDialog.value = false },
+                        visible = showChooseImageDialog.value,
+                        onImageResult = {
+                            localImagePath.value = it
+                        }
+                    )
+                    when (updateState.value) {
+                        is ViewState.Loading -> Loader()
+                        is ViewState.Success -> setFinish(true)
+                    }
+                }
             }
-        )
-        ChooseImageDialog(
-            onDismissRequest = { showChooseImageDialog.value = false },
-            visible = showChooseImageDialog.value,
-            onImageResult = {
-                localImagePath.value = it
-            }
-        )
-        when (updateState.value) {
-            is ViewState.Loading -> Loader()
-            is ViewState.Success -> onBackPressed()
         }
     }
+    LaunchedEffect(isFinish) {
+        if (isFinish) {
+            delay(100)
+            onBackPressed()
+        }
+    }
+    BackHandler(
+        onBack = {
+            setFinish(true)
+        }
+    )
 }
 
 @Composable
@@ -128,6 +163,7 @@ fun EditProfileBody(
     val isValidUserName = TextValidator.isValidUsername(username.text)
     val isValidBio = TextValidator.isValidBio(bio.text)
     Scaffold(
+        modifier = Modifier.background(KantoTheme.colors.background),
         topBar = {
             EditProfileTopBar(
                 backgroundColor = KantoTheme.colors.background,
@@ -147,7 +183,9 @@ fun EditProfileBody(
     ) { innerPadding ->
         val modifier = Modifier.padding(innerPadding)
         Column(
-            modifier = modifier.padding(horizontal = 16.dp),
+            modifier = modifier
+                .padding(horizontal = 16.dp)
+                .background(KantoTheme.colors.background),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val imageData = if (localImagePath.isNotEmpty()) {

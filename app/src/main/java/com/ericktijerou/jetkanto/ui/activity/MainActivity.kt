@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.ericktijerou.jetkanto.ui.KantoApp
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
+import com.ericktijerou.jetkanto.ui.util.LocalBackDispatcher
 import com.ericktijerou.jetkanto.ui.util.LocalSysUiController
 import com.ericktijerou.jetkanto.ui.util.SystemUiController
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val darkMode by sharedViewModel.uiMode.collectAsState(initial = isSystemInDarkTheme())
             val systemUiController = remember { SystemUiController(window) }
-            CompositionLocalProvider(LocalSysUiController provides systemUiController) {
+            CompositionLocalProvider(LocalSysUiController provides systemUiController, LocalBackDispatcher provides onBackPressedDispatcher) {
                 val toggleTheme: () -> Unit = {
                     sharedViewModel.setDarkMode(!darkMode)
                 }
