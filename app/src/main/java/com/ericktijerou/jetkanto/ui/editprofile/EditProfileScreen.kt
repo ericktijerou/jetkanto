@@ -61,6 +61,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.core.getRealPath
@@ -169,9 +170,9 @@ fun EditProfileBody(
                     .padding(top = 8.dp, bottom = 16.dp)
                     .defaultMinSize(
                         minWidth = ButtonDefaults.MinWidth,
-                        minHeight = 32.dp
+                        minHeight = 28.dp
                     )
-                    .height(32.dp),
+                    .height(28.dp),
                 onClick = onChangePhoto,
                 shape = CircleShape,
                 colors = textButtonColors(
@@ -183,7 +184,8 @@ fun EditProfileBody(
                     text = stringResource(R.string.label_change_photo),
                     style = KantoTheme.typography.body2.copy(
                         color = KantoTheme.customColors.textSecondaryColor,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 10.sp
                     )
                 )
             }
