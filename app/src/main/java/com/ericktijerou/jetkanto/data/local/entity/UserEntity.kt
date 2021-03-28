@@ -26,5 +26,6 @@ data class UserEntity(
     val bio: String = EMPTY,
     val followers: Int = ZERO,
     val followed: Int = ZERO,
-    val views: Int = ZERO
+    val views: Int = ZERO,
+    val localAvatarPath: String = EMPTY
 )

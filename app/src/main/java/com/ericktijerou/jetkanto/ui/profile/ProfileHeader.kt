@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,6 +45,7 @@ import com.ericktijerou.jetkanto.ui.entity.UserView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.PurpleOpaque
 import dev.chrisbanes.accompanist.coil.CoilImage
+import java.io.File
 
 @Composable
 fun TopBarContent(modifier: Modifier = Modifier, session: UserView, goToEditProfile: () -> Unit) {
@@ -57,13 +59,19 @@ fun TopBarContent(modifier: Modifier = Modifier, session: UserView, goToEditProf
             strokeWidth = 2.dp,
             modifier = Modifier.size(112.dp)
         ) { imageSize ->
+            val imageData = if (session.localAvatarPath.isNotEmpty()) {
+                File(session.localAvatarPath)
+            } else {
+                session.avatar
+            }
             CoilImage(
-                data = session.avatar,
+                data = imageData,
                 contentDescription = stringResource(R.string.label_avatar),
                 fadeIn = true,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(imageSize)
+                    .size(imageSize),
+                contentScale = ContentScale.Crop
             )
         }
         Text(

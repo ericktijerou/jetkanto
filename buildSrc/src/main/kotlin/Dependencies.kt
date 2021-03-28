@@ -123,7 +123,7 @@ object Configs {
     const val applicationId = "com.ericktijerou.jetkanto"
     const val buildToolsVersion = "30.0.3"
     const val compileSdkVersion = 30
-    const val minSdkVersion = 21
+    const val minSdkVersion = 23
     const val targetSdkVersion = 30
     const val versionCode = 1
     const val versionName = "1.0.0"
@@ -142,7 +142,7 @@ object Versions {
     internal const val room = "2.3.0-beta01"
     internal const val okhttp = "4.9.1"
     internal const val composeViewModel = "1.0.0-alpha01"
-    internal const val composeActivity = "1.3.0-alpha04"
+    internal const val composeActivity = "1.3.0-alpha05"
     internal const val composeConstraint = "1.0.0-alpha03"
     internal const val navigationCompose = "1.0.0-alpha09"
     internal const val spotless = "5.10.0"

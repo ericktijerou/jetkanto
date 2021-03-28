@@ -15,12 +15,14 @@
  */
 package com.ericktijerou.jetkanto.ui.editprofile
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.compose.registerForActivityResult
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -52,6 +54,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -59,14 +63,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ericktijerou.jetkanto.R
+import com.ericktijerou.jetkanto.core.getRealPath
+import com.ericktijerou.jetkanto.core.saveBitmap
 import com.ericktijerou.jetkanto.ui.component.Loader
+import com.ericktijerou.jetkanto.ui.component.RequestPermission
 import com.ericktijerou.jetkanto.ui.component.TextField
+import com.ericktijerou.jetkanto.ui.entity.UserView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.Teal500
 import com.ericktijerou.jetkanto.ui.util.TextValidator
 import com.ericktijerou.jetkanto.ui.util.ViewState
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 import dev.chrisbanes.accompanist.coil.CoilImage
+import java.io.File
 
 @Composable
 fun EditProfileScreen(onBackPressed: () -> Unit) {
@@ -77,110 +86,134 @@ fun EditProfileScreen(onBackPressed: () -> Unit) {
     if (session == null) {
         Loader()
     } else {
-        var name by remember { mutableStateOf(TextFieldValue(session.name)) }
-        var username by remember { mutableStateOf(TextFieldValue(session.username)) }
-        var bio by remember { mutableStateOf(TextFieldValue(session.bio)) }
-        val isValidName = TextValidator.isValidName(name.text)
-        val isValidUserName = TextValidator.isValidUsername(username.text)
-        val isValidBio = TextValidator.isValidBio(bio.text)
-        Scaffold(
-            topBar = {
-                EditProfileTopBar(
-                    backgroundColor = KantoTheme.colors.background,
-                    onBackPressed = onBackPressed,
-                    onSave = {
-                        val newSession = session.apply {
-                            this.name = name.text
-                            this.username = username.text
-                            this.bio = bio.text
-                        }
-                        viewModel.updateSession(newSession)
-                    },
-                    saveEnabled = isValidName && isValidUserName && isValidBio
-                )
+        val localImagePath = remember { mutableStateOf(session.localAvatarPath) }
+        EditProfileBody(
+            session = session,
+            onBackPressed = onBackPressed,
+            localImagePath = localImagePath.value,
+            onSave = { newSession ->
+                viewModel.updateSession(newSession)
+            },
+            onChangePhoto = {
+                showChooseImageDialog.value = true
             }
-        ) { innerPadding ->
-            val modifier = Modifier.padding(innerPadding)
-            Column(
-                modifier = modifier.padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CoilImage(
-                    data = session.avatar,
-                    contentDescription = stringResource(R.string.label_avatar),
-                    fadeIn = true,
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .clip(CircleShape)
-                        .size(72.dp)
-                )
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .padding(top = 8.dp, bottom = 16.dp)
-                        .height(24.dp)
-                        .clickable {
-                            showChooseImageDialog.value = true
-                        }
-                        .background(color = KantoTheme.customColors.cardColor, shape = CircleShape)
-                ) {
-                    Text(
-                        text = stringResource(R.string.label_change_photo),
-                        style = KantoTheme.typography.body2.copy(
-                            color = Color.Black,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-                }
-                TextField(
-                    textFieldValue = name,
-                    label = stringResource(R.string.label_name),
-                    onTextChanged = { name = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .padding(vertical = 4.dp),
-                    isErrorValue = !isValidName
-                )
-                TextField(
-                    textFieldValue = username,
-                    label = stringResource(R.string.label_username),
-                    onTextChanged = { username = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .padding(vertical = 4.dp),
-                    isErrorValue = !isValidUserName
-                )
-                TextField(
-                    textFieldValue = bio,
-                    label = stringResource(R.string.label_bio),
-                    onTextChanged = { bio = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .padding(vertical = 4.dp),
-                    isErrorValue = !isValidBio
-                )
-            }
-        }
-        val startForResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { result: ActivityResult ->
-                if (result.resultCode == Activity.RESULT_OK) {
-
-                }
-            }
+        )
         ChooseImageDialog(
             onDismissRequest = { showChooseImageDialog.value = false },
             visible = showChooseImageDialog.value,
-            activityResultLauncher = startForResult
+            onImageResult = {
+                localImagePath.value = it
+            }
         )
         when (updateState.value) {
             is ViewState.Loading -> Loader()
             is ViewState.Success -> onBackPressed()
+        }
+    }
+}
+
+@Composable
+fun EditProfileBody(
+    session: UserView,
+    onBackPressed: () -> Unit,
+    localImagePath: String,
+    onSave: (UserView) -> Unit,
+    onChangePhoto: () -> Unit
+) {
+    var name by remember { mutableStateOf(TextFieldValue(session.name)) }
+    var username by remember { mutableStateOf(TextFieldValue(session.username)) }
+    var bio by remember { mutableStateOf(TextFieldValue(session.bio)) }
+    val isValidName = TextValidator.isValidName(name.text)
+    val isValidUserName = TextValidator.isValidUsername(username.text)
+    val isValidBio = TextValidator.isValidBio(bio.text)
+    Scaffold(
+        topBar = {
+            EditProfileTopBar(
+                backgroundColor = KantoTheme.colors.background,
+                onBackPressed = onBackPressed,
+                onSave = {
+                    val newSession = session.apply {
+                        this.name = name.text
+                        this.username = username.text
+                        this.bio = bio.text
+                        this.localAvatarPath = localImagePath
+                    }
+                    onSave(newSession)
+                },
+                saveEnabled = isValidName && isValidUserName && isValidBio
+            )
+        }
+    ) { innerPadding ->
+        val modifier = Modifier.padding(innerPadding)
+        Column(
+            modifier = modifier.padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val imageData = if (localImagePath.isNotEmpty()) {
+                File(localImagePath)
+            } else {
+                session.avatar
+            }
+            CoilImage(
+                data = imageData,
+                contentDescription = stringResource(R.string.label_avatar),
+                fadeIn = true,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .clip(CircleShape)
+                    .size(72.dp),
+                contentScale = ContentScale.Crop
+            )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(top = 8.dp, bottom = 16.dp)
+                    .height(24.dp)
+                    .clickable {
+                        onChangePhoto()
+                    }
+                    .background(color = KantoTheme.customColors.cardColor, shape = CircleShape)
+            ) {
+                Text(
+                    text = stringResource(R.string.label_change_photo),
+                    style = KantoTheme.typography.body2.copy(
+                        color = Color.Black,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
+            TextField(
+                textFieldValue = name,
+                label = stringResource(R.string.label_name),
+                onTextChanged = { name = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(vertical = 4.dp),
+                isErrorValue = !isValidName
+            )
+            TextField(
+                textFieldValue = username,
+                label = stringResource(R.string.label_username),
+                onTextChanged = { username = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(vertical = 4.dp),
+                isErrorValue = !isValidUserName
+            )
+            TextField(
+                textFieldValue = bio,
+                label = stringResource(R.string.label_bio),
+                onTextChanged = { bio = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(vertical = 4.dp),
+                isErrorValue = !isValidBio
+            )
         }
     }
 }
@@ -234,8 +267,28 @@ fun EditProfileTopBar(
 fun ChooseImageDialog(
     onDismissRequest: () -> Unit,
     visible: Boolean,
-    activityResultLauncher: ActivityResultLauncher<Intent>
+    onImageResult: (String) -> Unit
 ) {
+    val context = LocalContext.current
+    val shouldRequestPermission = remember { mutableStateOf(false) }
+    val requestCode = remember { mutableStateOf<RequestCode>(RequestCode.Camera) }
+    val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val imagePath = when (requestCode.value) {
+                    RequestCode.Gallery -> {
+                        result.data?.data?.getRealPath(context)
+                    }
+                    RequestCode.Camera -> {
+                        val bitmap = result.data?.extras?.get("data") as? Bitmap
+                        bitmap?.let { context.saveBitmap(it) }
+                    }
+                }
+                imagePath?.let {
+                    onImageResult(it)
+                }
+            }
+        }
     if (visible) {
         Dialog(onDismissRequest = onDismissRequest) {
             Column(
@@ -254,9 +307,11 @@ fun ChooseImageDialog(
                 )
                 TextButton(
                     onClick = {
-                        activityResultLauncher.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
+                        requestCode.value = RequestCode.Camera
+                        startForResult.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
                         onDismissRequest()
-                    }, modifier = Modifier
+                    },
+                    modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
@@ -268,14 +323,10 @@ fun ChooseImageDialog(
                 }
                 TextButton(
                     onClick = {
-                        activityResultLauncher.launch(
-                            Intent(
-                                Intent.ACTION_PICK,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                            )
-                        )
+                        shouldRequestPermission.value = true
                         onDismissRequest()
-                    }, modifier = Modifier
+                    },
+                    modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
@@ -288,4 +339,29 @@ fun ChooseImageDialog(
             }
         }
     }
+    if (shouldRequestPermission.value) {
+        RequestPermission(Manifest.permission.READ_EXTERNAL_STORAGE) { permissionGranted ->
+            if (permissionGranted) {
+                requestCode.value = RequestCode.Gallery
+                startForResult.launch(
+                    Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    )
+                )
+            } else {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.label_require_permission),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            shouldRequestPermission.value = false
+        }
+    }
+}
+
+sealed class RequestCode {
+    object Camera : RequestCode()
+    object Gallery : RequestCode()
 }

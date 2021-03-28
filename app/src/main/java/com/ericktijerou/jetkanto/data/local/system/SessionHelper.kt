@@ -39,6 +39,7 @@ class SessionHelper @Inject constructor(private val context: Context) {
             val name = preferences[NAME_KEY] ?: EMPTY
             val username = preferences[USERNAME_KEY] ?: EMPTY
             val avatar = preferences[AVATAR_KEY] ?: EMPTY
+            val localAvatar = preferences[LOCAL_AVATAR_KEY] ?: EMPTY
             val bio = preferences[BIO_KEY] ?: EMPTY
             val followers = preferences[FOLLOWERS_KEY] ?: ZERO
             val followed = preferences[FOLLOWED_KEY] ?: ZERO
@@ -51,7 +52,8 @@ class SessionHelper @Inject constructor(private val context: Context) {
                 bio = bio,
                 followers = followers,
                 followed = followed,
-                views = views
+                views = views,
+                localAvatarPath = localAvatar
             )
         }
 
@@ -61,6 +63,7 @@ class SessionHelper @Inject constructor(private val context: Context) {
             preferences[NAME_KEY] = name
             preferences[USERNAME_KEY] = username
             preferences[AVATAR_KEY] = avatar
+            preferences[LOCAL_AVATAR_KEY] = localAvatarPath
             preferences[BIO_KEY] = bio
             preferences[FOLLOWERS_KEY] = followers
             preferences[FOLLOWED_KEY] = followed
@@ -73,6 +76,7 @@ class SessionHelper @Inject constructor(private val context: Context) {
         private const val PREF_KEY_NAME = "name"
         private const val PREF_KEY_USERNAME = "username"
         private const val PREF_KEY_AVATAR = "avatar"
+        private const val PREF_KEY_LOCAL_AVATAR = "local_avatar"
         private const val PREF_KEY_BIO = "bio"
         private const val PREF_KEY_FOLLOWERS = "followers"
         private const val PREF_KEY_FOLLOWED = "followed"
@@ -82,6 +86,7 @@ class SessionHelper @Inject constructor(private val context: Context) {
         private val NAME_KEY = stringPreferencesKey(PREF_KEY_NAME)
         private val USERNAME_KEY = stringPreferencesKey(PREF_KEY_USERNAME)
         private val AVATAR_KEY = stringPreferencesKey(PREF_KEY_AVATAR)
+        private val LOCAL_AVATAR_KEY = stringPreferencesKey(PREF_KEY_LOCAL_AVATAR)
         private val BIO_KEY = stringPreferencesKey(PREF_KEY_BIO)
         private val FOLLOWERS_KEY = intPreferencesKey(PREF_KEY_FOLLOWERS)
         private val FOLLOWED_KEY = intPreferencesKey(PREF_KEY_FOLLOWED)

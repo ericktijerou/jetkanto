@@ -23,5 +23,6 @@ data class User(
     val bio: String,
     val followers: Int,
     val followed: Int,
-    val views: Int
+    val views: Int,
+    val localAvatarPath: String
 )

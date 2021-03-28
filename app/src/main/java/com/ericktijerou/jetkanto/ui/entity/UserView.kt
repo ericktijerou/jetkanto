@@ -23,5 +23,6 @@ data class UserView(
     var bio: String,
     val followers: Int,
     val followed: Int,
-    val views: Int
+    val views: Int,
+    var localAvatarPath: String
 )

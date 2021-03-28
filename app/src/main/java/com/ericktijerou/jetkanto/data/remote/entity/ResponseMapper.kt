@@ -15,6 +15,7 @@
  */
 package com.ericktijerou.jetkanto.data.remote.entity
 
+import com.ericktijerou.jetkanto.core.EMPTY
 import com.ericktijerou.jetkanto.core.orZero
 import com.ericktijerou.jetkanto.data.entity.RecordModel
 import com.ericktijerou.jetkanto.data.entity.UserModel
@@ -36,5 +37,6 @@ fun UserResponse.toData() = UserModel(
     bio = bio.orEmpty(),
     followers = followers.orZero(),
     followed = followed.orZero(),
-    views = views.orZero()
+    views = views.orZero(),
+    localAvatarPath = EMPTY
 )

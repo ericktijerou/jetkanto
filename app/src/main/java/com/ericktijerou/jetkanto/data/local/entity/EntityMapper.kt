@@ -26,7 +26,8 @@ fun UserEntity.toData() = UserModel(
     bio = bio,
     followers = followers,
     followed = followed,
-    views = views
+    views = views,
+    localAvatarPath = localAvatarPath
 )
 
 fun RecordEntity.toData() = RecordModel(
