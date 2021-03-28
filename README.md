@@ -32,9 +32,7 @@ You will require latest Canary version of Android Studio 4.2 or newer to be able
   - [Datastore](https://developer.android.com/topic/libraries/architecture/datastore)
   - [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager)
 
-- Architecture
-  - MVVM Architecture (Declarative View - ViewModel - Model) clean architecture
-  - Repository pattern
+- MVVM Architecture (Declarative View - ViewModel - Model) clean architecture
 
 - Dark mode 🌗
 
