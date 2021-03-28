@@ -5,10 +5,6 @@
   <img alt="Compose" src="https://img.shields.io/badge/Compose-1.0.0--beta03-brightgreen"/>
 </p>
 
-![Workflow result](https://github.com/ericktijerou/jetpuppy/workflows/Check/badge.svg)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.4.30-blueviolet.svg)](https://kotlinlang.org)
-![Compose](https://img.shields.io/badge/Compose-1.0.0--beta01-brightgreen)
-
 ## What's Jetkanto? :rocket:
 Kanto clone built with Jetpack Compose and Hilt based on modern Android tech-stacks and MVVM clean architecture.
 
