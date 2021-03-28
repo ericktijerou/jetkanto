@@ -84,7 +84,12 @@ fun RecordList(
             items = list,
             itemContent = { index, record ->
                 val focused = autoPlay && index == scrollState.firstVisibleItemIndex
-                RecordCard(record = record, focused = focused, onFavoriteClick = onFavoriteClick)
+                RecordCard(
+                    record = record,
+                    focused = focused,
+                    onFavoriteClick = onFavoriteClick,
+                    autoPlay = autoPlay
+                )
             }
         )
         item {
@@ -97,7 +102,8 @@ fun RecordList(
 fun RecordCard(
     record: RecordView,
     focused: Boolean,
-    onFavoriteClick: (Long, Boolean) -> Unit
+    onFavoriteClick: (Long, Boolean) -> Unit,
+    autoPlay: Boolean
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -116,6 +122,7 @@ fun RecordCard(
             KantoPlayer(
                 record = record,
                 focused = focused,
+                autoPlay = autoPlay,
                 modifier = Modifier
                     .aspectRatio(1f)
                     .fillMaxWidth()
@@ -130,7 +137,12 @@ fun RecordCard(
 }
 
 @Composable
-fun KantoPlayer(record: RecordView, modifier: Modifier = Modifier, focused: Boolean) {
+fun KantoPlayer(
+    record: RecordView,
+    modifier: Modifier = Modifier,
+    focused: Boolean,
+    autoPlay: Boolean
+) {
     val videoPlayerController = rememberVideoPlayerController()
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(videoPlayerController, lifecycleOwner) {
@@ -140,7 +152,7 @@ fun KantoPlayer(record: RecordView, modifier: Modifier = Modifier, focused: Bool
             }
 
             override fun onResume(owner: LifecycleOwner) {
-                videoPlayerController.play()
+                if (autoPlay) videoPlayerController.play()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
