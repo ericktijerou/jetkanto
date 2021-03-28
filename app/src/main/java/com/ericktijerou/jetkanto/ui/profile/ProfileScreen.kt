@@ -32,6 +32,7 @@ import com.ericktijerou.jetkanto.core.headerCollapsedHeight
 import com.ericktijerou.jetkanto.core.headerExpandedHeight
 import com.ericktijerou.jetkanto.ui.component.CollapsingScrollTopBar
 import com.ericktijerou.jetkanto.ui.component.CollapsingTopBarHeader
+import com.ericktijerou.jetkanto.ui.component.Loader
 import com.ericktijerou.jetkanto.ui.entity.orEmpty
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
@@ -71,9 +72,11 @@ fun ProfileScreen(modifier: Modifier, goToEditProfile: () -> Unit, toggleTheme: 
         },
         scrollContent = { scrollProgress, scrollState ->
             val records = viewModel.records.collectAsState(initial = null).value
-            records?.let {
+            if (records.isNullOrEmpty()) {
+                Loader(modifier = Modifier.padding(top = headerExpandedHeight))
+            } else {
                 RecordList(
-                    list = it,
+                    list = records,
                     modifier = Modifier.fillMaxWidth(),
                     scrollState = scrollState,
                     autoPlay = scrollProgress < 0.6f,

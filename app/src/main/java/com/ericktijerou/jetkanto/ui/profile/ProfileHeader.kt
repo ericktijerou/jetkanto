@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.ui.component.Avatar
+import com.ericktijerou.jetkanto.ui.component.Loader
 import com.ericktijerou.jetkanto.ui.entity.UserView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.theme.PurpleDark
@@ -96,29 +97,38 @@ fun TopBarContent(modifier: Modifier = Modifier, session: UserView, goToEditProf
             modifier = Modifier.padding(top = 8.dp),
             textAlign = TextAlign.Center
         )
-        TextButton(
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .defaultMinSize(
-                    minWidth = ButtonDefaults.MinWidth,
-                    minHeight = 26.dp
-                )
-                .height(26.dp),
-            onClick = goToEditProfile,
-            shape = CircleShape,
-            colors = ButtonDefaults.textButtonColors(
-                backgroundColor = Color.White,
-                contentColor = PurpleDark
+        if (session.id.isEmpty()) {
+            Loader(
+                strokeWidth = 2.dp,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .size(26.dp)
             )
-        ) {
-            Text(
-                text = stringResource(R.string.label_edit_profile),
-                style = KantoTheme.typography.body2.copy(
-                    color = Color.Black,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
+        } else {
+            TextButton(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .defaultMinSize(
+                        minWidth = ButtonDefaults.MinWidth,
+                        minHeight = 26.dp
+                    )
+                    .height(26.dp),
+                onClick = goToEditProfile,
+                shape = CircleShape,
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = Color.White,
+                    contentColor = PurpleDark
                 )
-            )
+            ) {
+                Text(
+                    text = stringResource(R.string.label_edit_profile),
+                    style = KantoTheme.typography.body2.copy(
+                        color = Color.Black,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
         }
         Row(
             modifier = Modifier
