@@ -23,6 +23,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -86,6 +87,7 @@ fun KantoTheme(
 object KantoTheme {
     val customColors: KantoColors
         @Composable
+        @ReadOnlyComposable
         get() = LocalKantoColors.current
 
     val colors: Colors
@@ -105,20 +107,32 @@ class KantoColors(
     isDark: Boolean
 ) {
     var textPrimaryColor by mutableStateOf(textPrimaryColor)
-        private set
+        internal set
     var textSecondaryColor by mutableStateOf(textSecondaryColor)
-        private set
+        internal set
     var cardColor by mutableStateOf(cardColor)
-        private set
+        internal set
     var isDark by mutableStateOf(isDark)
-        private set
+        internal set
 
-    fun update(other: KantoColors) {
-        textPrimaryColor = other.textPrimaryColor
-        textSecondaryColor = other.textSecondaryColor
-        cardColor = other.cardColor
-        isDark = other.isDark
-    }
+    fun copy(
+        textPrimaryColor: Color = this.textPrimaryColor,
+        textSecondaryColor: Color = this.textSecondaryColor,
+        cardColor: Color = this.cardColor,
+        isDark: Boolean = this.isDark
+    ): KantoColors = KantoColors(
+        textPrimaryColor,
+        textSecondaryColor,
+        cardColor,
+        isDark
+    )
+}
+
+internal fun KantoColors.update(other: KantoColors) {
+    textPrimaryColor = other.textPrimaryColor
+    textSecondaryColor = other.textSecondaryColor
+    cardColor = other.cardColor
+    isDark = other.isDark
 }
 
 @Composable
@@ -126,8 +140,9 @@ fun ProvideKantoColors(
     colors: KantoColors,
     content: @Composable () -> Unit
 ) {
-    val colorPalette = remember { colors }
-    colorPalette.update(colors)
+    val colorPalette = remember { colors.copy() }.apply {
+        update(colors)
+    }
     CompositionLocalProvider(LocalKantoColors provides colorPalette, content = content)
 }
 

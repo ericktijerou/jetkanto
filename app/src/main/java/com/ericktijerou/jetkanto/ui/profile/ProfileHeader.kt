@@ -16,18 +16,19 @@
 package com.ericktijerou.jetkanto.ui.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,7 @@ import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.ui.component.Avatar
 import com.ericktijerou.jetkanto.ui.entity.UserView
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
+import com.ericktijerou.jetkanto.ui.theme.PurpleDark
 import com.ericktijerou.jetkanto.ui.theme.PurpleOpaque
 import dev.chrisbanes.accompanist.coil.CoilImage
 import java.io.File
@@ -94,13 +96,20 @@ fun TopBarContent(modifier: Modifier = Modifier, session: UserView, goToEditProf
             modifier = Modifier.padding(top = 8.dp),
             textAlign = TextAlign.Center
         )
-        Box(
-            contentAlignment = Alignment.Center,
+        TextButton(
             modifier = Modifier
                 .padding(top = 8.dp)
-                .height(24.dp)
-                .clickable { goToEditProfile() }
-                .background(color = Color.White, shape = CircleShape)
+                .defaultMinSize(
+                    minWidth = ButtonDefaults.MinWidth,
+                    minHeight = 26.dp
+                )
+                .height(26.dp),
+            onClick = goToEditProfile,
+            shape = CircleShape,
+            colors = ButtonDefaults.textButtonColors(
+                backgroundColor = Color.White,
+                contentColor = PurpleDark
+            )
         ) {
             Text(
                 text = stringResource(R.string.label_edit_profile),
@@ -108,8 +117,7 @@ fun TopBarContent(modifier: Modifier = Modifier, session: UserView, goToEditProf
                     color = Color.Black,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold
-                ),
-                modifier = Modifier.padding(horizontal = 8.dp)
+                )
             )
         }
         Row(

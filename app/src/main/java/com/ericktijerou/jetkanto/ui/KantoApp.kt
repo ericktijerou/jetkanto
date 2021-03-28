@@ -27,16 +27,17 @@ import com.ericktijerou.jetkanto.ui.util.Screens
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
 
 @Composable
-fun KantoApp() {
+fun KantoApp(darkTheme: Boolean, toggleTheme: () -> Unit) {
     ProvideWindowInsets {
-        KantoTheme {
+        KantoTheme(darkTheme = darkTheme) {
             val navController = rememberNavController()
             NavHost(navController, startDestination = Screens.Main.route) {
                 composable(Screens.Main.route) {
                     MainScreen(
                         goToEditProfile = {
                             navController.navigate(route = Screens.EditProfile.route)
-                        }
+                        },
+                        toggleTheme = toggleTheme
                     )
                 }
                 composable(Screens.EditProfile.route) {

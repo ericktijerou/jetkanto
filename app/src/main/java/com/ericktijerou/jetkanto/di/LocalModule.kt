@@ -21,6 +21,7 @@ import com.ericktijerou.jetkanto.data.local.RecordDataStore
 import com.ericktijerou.jetkanto.data.local.SessionDataStore
 import com.ericktijerou.jetkanto.data.local.dao.RecordDao
 import com.ericktijerou.jetkanto.data.local.system.KantoDatabase
+import com.ericktijerou.jetkanto.data.local.system.PreferenceHelper
 import com.ericktijerou.jetkanto.data.local.system.SessionHelper
 import dagger.Module
 import dagger.Provides
@@ -42,7 +43,11 @@ object LocalModule {
 
     @Singleton
     @Provides
-    fun provideSessionManager(@ApplicationContext context: Context) = SessionHelper(context)
+    fun provideSessionHelper(@ApplicationContext context: Context) = SessionHelper(context)
+
+    @Singleton
+    @Provides
+    fun providePreferenceHelper(@ApplicationContext context: Context) = PreferenceHelper(context)
 
     @Singleton
     @Provides
@@ -50,5 +55,6 @@ object LocalModule {
 
     @Singleton
     @Provides
-    fun provideSessionDataStore(sessionHelper: SessionHelper) = SessionDataStore(sessionHelper)
+    fun provideSessionDataStore(sessionHelper: SessionHelper, preferenceHelper: PreferenceHelper) =
+        SessionDataStore(sessionHelper, preferenceHelper)
 }

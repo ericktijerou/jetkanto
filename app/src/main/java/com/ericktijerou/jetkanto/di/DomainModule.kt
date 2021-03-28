@@ -22,6 +22,8 @@ import com.ericktijerou.jetkanto.domain.usecase.record.GetRecordUseCase
 import com.ericktijerou.jetkanto.domain.usecase.record.SyncRecordUseCase
 import com.ericktijerou.jetkanto.domain.usecase.session.GetSessionUseCase
 import com.ericktijerou.jetkanto.domain.usecase.session.SyncSessionUseCase
+import com.ericktijerou.jetkanto.domain.usecase.shared.GetUiModeUseCase
+import com.ericktijerou.jetkanto.domain.usecase.shared.SetDarkModeUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,5 +56,17 @@ object DomainModule {
     @ActivityRetainedScoped
     fun provideSyncRecordUseCase(workManager: WorkManager): SyncRecordUseCase {
         return SyncRecordUseCase(workManager)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideGetUiModeUseCase(sessionRepository: SessionRepository): GetUiModeUseCase {
+        return GetUiModeUseCase(sessionRepository)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideSetDarkModeUseCase(sessionRepository: SessionRepository): SetDarkModeUseCase {
+        return SetDarkModeUseCase(sessionRepository)
     }
 }

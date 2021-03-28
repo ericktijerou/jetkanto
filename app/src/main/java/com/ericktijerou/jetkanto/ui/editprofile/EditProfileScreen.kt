@@ -25,15 +25,16 @@ import androidx.activity.compose.registerForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ButtonDefaults.textButtonColors
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -60,7 +61,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ericktijerou.jetkanto.R
 import com.ericktijerou.jetkanto.core.getRealPath
@@ -164,24 +164,27 @@ fun EditProfileBody(
                     .size(72.dp),
                 contentScale = ContentScale.Crop
             )
-            Box(
-                contentAlignment = Alignment.Center,
+            TextButton(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 16.dp)
-                    .height(24.dp)
-                    .clickable {
-                        onChangePhoto()
-                    }
-                    .background(color = KantoTheme.customColors.cardColor, shape = CircleShape)
+                    .defaultMinSize(
+                        minWidth = ButtonDefaults.MinWidth,
+                        minHeight = 32.dp
+                    )
+                    .height(32.dp),
+                onClick = onChangePhoto,
+                shape = CircleShape,
+                colors = textButtonColors(
+                    backgroundColor = KantoTheme.customColors.cardColor,
+                    contentColor = Color.Black
+                )
             ) {
                 Text(
                     text = stringResource(R.string.label_change_photo),
                     style = KantoTheme.typography.body2.copy(
-                        color = Color.Black,
-                        fontSize = 10.sp,
+                        color = KantoTheme.customColors.textSecondaryColor,
                         fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    )
                 )
             }
             TextField(

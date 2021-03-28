@@ -34,4 +34,12 @@ class SessionRepositoryImpl @Inject constructor(
     override suspend fun updateSession(user: User) {
         return sessionDataStore.saveSession(user.toLocal())
     }
+
+    override fun getUiMode(): Flow<Boolean> {
+        return sessionDataStore.getUiMode()
+    }
+
+    override suspend fun setDarkMode(enable: Boolean) {
+        sessionDataStore.setDarkMode(enable)
+    }
 }

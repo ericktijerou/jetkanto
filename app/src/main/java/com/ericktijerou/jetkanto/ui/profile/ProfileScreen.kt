@@ -37,7 +37,7 @@ import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 
 @Composable
-fun ProfileScreen(modifier: Modifier, goToEditProfile: () -> Unit) {
+fun ProfileScreen(modifier: Modifier, goToEditProfile: () -> Unit, toggleTheme: () -> Unit) {
     val viewModel: ProfileViewModel by hiltViewModel()
     CollapsingScrollTopBar(
         expandedHeight = headerExpandedHeight,
@@ -48,9 +48,9 @@ fun ProfileScreen(modifier: Modifier, goToEditProfile: () -> Unit) {
                 scrollProgress = scrollProgress,
                 expandedHeight = headerExpandedHeight,
                 collapsedHeight = headerCollapsedHeight,
-                onCloseClicked = { },
                 topBarTintCollapsedColor = KantoTheme.customColors.textPrimaryColor,
-                topBarTintExpandedColor = Color.White
+                topBarTintExpandedColor = Color.White,
+                toggleTheme = toggleTheme
             ) {
                 val alphaAnimate by animateFloatAsState(
                     targetValue = if (scrollProgress < 0.5f) 0f else scrollProgress,

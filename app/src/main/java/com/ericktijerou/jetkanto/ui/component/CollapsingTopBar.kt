@@ -33,7 +33,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -90,13 +91,13 @@ fun CollapsingTopBarHeader(
     scrollProgress: Float,
     expandedHeight: Dp,
     collapsedHeight: Dp,
-    onCloseClicked: () -> Unit,
     expandedElevation: Dp = 0.dp,
     collapsedElevation: Dp = 0.dp,
     titleSize: TextUnit = MaterialTheme.typography.subtitle1.fontSize,
     topBarColor: Color = MaterialTheme.colors.primary,
     topBarTintExpandedColor: Color = MaterialTheme.colors.onBackground,
     topBarTintCollapsedColor: Color = MaterialTheme.colors.onPrimary,
+    toggleTheme: () -> Unit,
     body: @Composable () -> Unit
 ) {
     val height = calculateHeight(scrollProgress, expandedHeight, collapsedHeight)
@@ -173,10 +174,12 @@ fun CollapsingTopBarHeader(
                 ) {
                     IconButton(
                         modifier = Modifier.align(Alignment.CenterEnd),
-                        onClick = { onCloseClicked() }
+                        onClick = toggleTheme
                     ) {
+                        val vector =
+                            if (KantoTheme.customColors.isDark) Icons.Filled.DarkMode else Icons.Filled.LightMode
                         Icon(
-                            Icons.Filled.Settings,
+                            imageVector = vector,
                             contentDescription = stringResource(R.string.label_settings),
                             tint = topBarTintColor
                         )

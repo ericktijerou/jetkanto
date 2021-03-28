@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto.ui
+package com.ericktijerou.jetkanto.ui.activity
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import com.ericktijerou.jetkanto.ui.KantoApp
 import com.ericktijerou.jetkanto.ui.theme.KantoTheme
 import com.ericktijerou.jetkanto.ui.util.LocalSysUiController
 import com.ericktijerou.jetkanto.ui.util.SystemUiController
@@ -29,12 +34,18 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val sharedViewModel: SharedViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val darkMode by sharedViewModel.uiMode.collectAsState(initial = isSystemInDarkTheme())
             val systemUiController = remember { SystemUiController(window) }
             CompositionLocalProvider(LocalSysUiController provides systemUiController) {
-                KantoApp()
+                val toggleTheme: () -> Unit = {
+                    sharedViewModel.setDarkMode(!darkMode)
+                }
+                KantoApp(darkMode, toggleTheme)
             }
         }
     }
@@ -44,6 +55,6 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun DefaultPreview() {
     KantoTheme {
-        KantoApp()
+        KantoApp(darkTheme = false) {}
     }
 }

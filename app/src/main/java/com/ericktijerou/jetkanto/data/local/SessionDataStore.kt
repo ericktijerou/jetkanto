@@ -16,16 +16,24 @@
 package com.ericktijerou.jetkanto.data.local
 
 import com.ericktijerou.jetkanto.data.entity.UserModel
+import com.ericktijerou.jetkanto.data.local.system.PreferenceHelper
 import com.ericktijerou.jetkanto.data.local.system.SessionHelper
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SessionDataStore @Inject constructor(
     private val sessionHelper: SessionHelper,
+    private val preferenceHelper: PreferenceHelper
 ) {
     fun getSession(): Flow<UserModel> = sessionHelper.session
 
     suspend fun saveSession(newSession: UserModel) {
         sessionHelper.saveSession(newSession)
+    }
+
+    fun getUiMode(): Flow<Boolean> = preferenceHelper.uiModeFlow
+
+    suspend fun setDarkMode(enable: Boolean) {
+        preferenceHelper.setDarkMode(enable)
     }
 }

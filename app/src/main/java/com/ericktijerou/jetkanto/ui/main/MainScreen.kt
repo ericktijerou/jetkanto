@@ -44,7 +44,7 @@ import com.ericktijerou.jetkanto.ui.util.ThemedPreview
 import com.ericktijerou.jetkanto.ui.util.hiltViewModel
 
 @Composable
-fun MainScreen(goToEditProfile: () -> Unit) {
+fun MainScreen(goToEditProfile: () -> Unit, toggleTheme: () -> Unit) {
     val viewModel: MainViewModel by hiltViewModel()
     val sections = listOf(
         MainSection.Community,
@@ -72,7 +72,8 @@ fun MainScreen(goToEditProfile: () -> Unit) {
             composable(MainSection.Profile.route) {
                 ProfileScreen(
                     modifier = modifier,
-                    goToEditProfile
+                    goToEditProfile = goToEditProfile,
+                    toggleTheme = toggleTheme
                 )
             }
         }
@@ -110,7 +111,7 @@ fun HomeBottomNavigation(
 @Composable
 fun PreviewMainScreen() {
     ThemedPreview {
-        MainScreen {}
+        MainScreen({}, {})
     }
 }
 
@@ -118,6 +119,6 @@ fun PreviewMainScreen() {
 @Composable
 fun PreviewMainScreenDark() {
     ThemedPreview(darkTheme = true) {
-        MainScreen {}
+        MainScreen({}, {})
     }
 }

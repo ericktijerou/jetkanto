@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ericktijerou.jetkanto.domain.repository
+package com.ericktijerou.jetkanto.domain.usecase.shared
 
-import com.ericktijerou.jetkanto.domain.entity.User
-import kotlinx.coroutines.flow.Flow
+import com.ericktijerou.jetkanto.domain.repository.SessionRepository
+import javax.inject.Inject
 
-interface SessionRepository {
-    fun getSession(): Flow<User>
-    suspend fun updateSession(user: User)
-    fun getUiMode(): Flow<Boolean>
-    suspend fun setDarkMode(enable: Boolean)
+class SetDarkModeUseCase @Inject constructor(private val repository: SessionRepository) {
+    suspend operator fun invoke(enable: Boolean) = repository.setDarkMode(enable)
 }
