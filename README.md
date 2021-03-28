@@ -8,15 +8,14 @@
 ## What's Jetkanto? :rocket:
 Kanto clone built with Jetpack Compose and Hilt based on modern Android tech-stacks and MVVM clean architecture.
 
+## Development Setup 🖥
+You will require latest Canary version of Android Studio 4.2 or newer to be able to build the app. Download latest Canary release from [here](https://developer.android.com/studio/preview).
+
 ### 🌙 Dark Mode
 <img src="/results/profile_dark.png" width="260">&emsp;<img src="/results/edit_profile_dark.png" width="260">&emsp;<img src="/results/list_dark.png" width="260">
 
 ### 🌞 Light Mode
 <img src="/results/profile_light.png" width="260">&emsp;<img src="/results/edit_profile_light.png" width="260">&emsp;<img src="/results/list_light.png" width="260">
-
-## Development Setup 🖥
-
-You will require latest Canary version of Android Studio 4.2 or newer to be able to build the app. Download latest Canary release from [here](https://developer.android.com/studio/preview).
 
 ## Tech stack & Open-source libraries
 - 100% [Kotlin](https://kotlinlang.org/) based + [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) + [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/) for asynchronous.
