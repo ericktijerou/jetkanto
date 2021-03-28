@@ -132,7 +132,7 @@ fun TopBarContent(modifier: Modifier = Modifier, session: UserView, goToEditProf
         }
         Row(
             modifier = Modifier
-                .padding(vertical = 16.dp, horizontal = 24.dp)
+                .padding(vertical = 16.dp, horizontal = 8.dp)
                 .height(50.dp)
                 .fillMaxWidth()
                 .background(color = PurpleOpaque, shape = RoundedCornerShape(16.dp)),

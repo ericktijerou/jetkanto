@@ -185,7 +185,7 @@ fun KantoPlayer(
             )
             LaunchedEffect(key1 = videoPlayerController) {
                 playerJob.value?.cancel()
-                delay(1000)
+                delay(750)
                 showPreview.value = false
                 playerJob.value = launch {
                     videoPlayerController.setVideoUrl(record.videoUrl)
